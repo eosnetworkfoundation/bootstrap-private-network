@@ -10,17 +10,18 @@
 
 ENDPOINT=$1
 CONTRACT_DIR=$2
+PUBLIC_KEY=$3
 
-cleos --url $ENDPOINT create account eosio eosio.bpay EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV
-cleos --url $ENDPOINT create account eosio eosio.msig EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV
-cleos --url $ENDPOINT create account eosio eosio.names EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV
-cleos --url $ENDPOINT create account eosio eosio.ram EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV
-cleos --url $ENDPOINT create account eosio eosio.ramfee EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV
-cleos --url $ENDPOINT create account eosio eosio.saving EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV
-cleos --url $ENDPOINT create account eosio eosio.stake EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV
-cleos --url $ENDPOINT create account eosio eosio.token EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV
-cleos --url $ENDPOINT create account eosio eosio.vpay EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV
-cleos --url $ENDPOINT create account eosio eosio.rex EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV
+cleos --url $ENDPOINT create account eosio eosio.bpay $PUBLIC_KEY
+cleos --url $ENDPOINT create account eosio eosio.msig $PUBLIC_KEY
+cleos --url $ENDPOINT create account eosio eosio.names $PUBLIC_KEY
+cleos --url $ENDPOINT create account eosio eosio.ram $PUBLIC_KEY
+cleos --url $ENDPOINT create account eosio eosio.ramfee $PUBLIC_KEY
+cleos --url $ENDPOINT create account eosio eosio.saving $PUBLIC_KEY
+cleos --url $ENDPOINT create account eosio eosio.stake $PUBLIC_KEY
+cleos --url $ENDPOINT create account eosio eosio.token $PUBLIC_KEY
+cleos --url $ENDPOINT create account eosio eosio.vpay $PUBLIC_KEY
+cleos --url $ENDPOINT create account eosio eosio.rex $PUBLIC_KEY
 
 cleos --url $ENDPOINT set contract eosio.token "$CONTRACT_DIR"/eosio.token/
 cleos --url $ENDPOINT push action eosio.token create '[ "eosio", "10000000000.0000 EOS" ]' -p eosio.token@active

@@ -20,7 +20,7 @@ GENESIS_FILE="${SCRIPT_DIR}/../config/genesis.json"
 echo "STARTING COMMAND ${COMMAND}"
 
 if [ "$COMMAND" == "NA" ]; then
-  echo "usage: finality_test_network.sh [CREATE|CLEAN|STOP]"
+  echo "usage: finality_test_network.sh [CREATE|START|CLEAN|STOP]"
   exit 1
 fi
 
@@ -90,7 +90,7 @@ if [ "$COMMAND" == "CREATE" ] || [ "$COMMAND" == "START" ]; then
 
   # create accounts, activate protocols, create tokens, set system contracts
   if [ "$COMMAND" == "CREATE" ]; then
-    "$SCRIPT_DIR"/boot_actions.sh "$ENDPOINT" "$CONTRACT_DIR"
+    "$SCRIPT_DIR"/boot_actions.sh "$ENDPOINT" "$CONTRACT_DIR" "$EOS_ROOT_PUBLIC_KEY"
   fi
 
   # start nodeos two
