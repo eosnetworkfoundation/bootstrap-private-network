@@ -21,10 +21,15 @@ RUN apt-get -y update && apt-get install -y  \
 RUN python3 -m pip install pygments
 RUN mkdir -p /local/eosnetworkfoundation
 RUN mkdir -p /bigata1/log
-RUN mkdir -p /bigata1/eosio/nodeos
+RUN mkdir -p /bigata1/savanna/nodeos-one
+RUN mkdir -p /bigata1/savanna/nodeos-two
+RUN mkdir -p /bigata1/savanna/nodeos-three
 RUN chmod 777 /local/eosnetworkfoundation
 RUN chmod 777 /bigata1/log
-RUN chmod 777 /bigata1/eosio/nodeos
+RUN chmod 777 /bigata1/savanna
+RUN chmod 777 /bigata1/savanna/nodeos-one
+RUN chmod 777 /bigata1/savanna/nodeos-two
+RUN chmod 777 /bigata1/savanna/nodeos-three
 RUN echo 'root:Docker!' | chpasswd
 RUN useradd -ms /bin/bash enfuser
 USER enfuser
