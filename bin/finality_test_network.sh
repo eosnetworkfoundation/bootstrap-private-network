@@ -79,7 +79,6 @@ if [ "$COMMAND" == "CREATE" ] || [ "$COMMAND" == "START" ]; then
     nodeos --agent-name "Finality Test Node One" \
       --http-server-address 0.0.0.0:${NODEOS_ONE_PORT} \
       --p2p-listen-endpoint 0.0.0.0:1444 \
-      --enable-stale-production \
       --signature-provider ${EOS_ROOT_PUBLIC_KEY}=KEY:${EOS_ROOT_PRIVATE_KEY} \
       --config "$ROOT_DIR"/config.ini \
       --data-dir "$ROOT_DIR"/nodeos-one/data \
