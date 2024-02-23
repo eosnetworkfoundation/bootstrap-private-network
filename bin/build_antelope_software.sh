@@ -38,6 +38,10 @@ echo "FINISHED BUILDING LEAP"
 
 echo "BUILDING CDT FROM ${CDT_GIT_COMMIT_TAG}"
 cd "${ROOT_DIR:?}"/repos/cdt || exit
+
+git checkout $CDT_GIT_COMMIT_TAG
+git pull origin $CDT_GIT_COMMIT_TAG
+
 mkdir build
 cd build || exit
 export leap_DIR="$LEAP_BUILD_DIR"/lib/cmake/leap
