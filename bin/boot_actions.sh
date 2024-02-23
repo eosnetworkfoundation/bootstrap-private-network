@@ -1,4 +1,4 @@
-#!/bin/env bash
+#!/usr/bin/env bash
 
 ####
 # Once first nodeos is setup, running and producing blocks

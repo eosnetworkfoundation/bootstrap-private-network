@@ -1,4 +1,4 @@
-#!/bin/env bash
+#!/usr/bin/env bash
 
 ####
 # Installs leap/nodeos and cdt software

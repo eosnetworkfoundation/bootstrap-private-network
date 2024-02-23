@@ -1,4 +1,4 @@
-#!/bin/env bash
+#!/usr/bin/env bash
 
 ####
 # Builds savanna compatible contracts that installed into leap/nodeos

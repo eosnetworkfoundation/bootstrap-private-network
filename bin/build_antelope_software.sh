@@ -1,9 +1,9 @@
-#!/bin/env bash
+#!/usr/bin/env bash
 
 ####
 # Builds leap/nodeos and cdt software
 # does not install software
-# called from Docker Build 
+# called from Docker Build
 ###
 
 LEAP_GIT_COMMIT_TAG=${1:-hotstuff_integration}

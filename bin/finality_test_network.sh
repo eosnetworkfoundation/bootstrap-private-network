@@ -1,8 +1,8 @@
-#!/bin/env bash
+#!/usr/bin/env bash
 
 ####
 # Once antelope software is build and installed
-# script to manage private network 
+# script to manage private network
 # CREATE new network with 3 nodes
 # CLEAN out data from previous network
 # STOP all nodes on network
