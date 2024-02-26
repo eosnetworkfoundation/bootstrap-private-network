@@ -15,7 +15,8 @@ LOG_DIR="/bigata1/log"
 WALLET_DIR=${HOME}/eosio-wallet
 CONTRACT_DIR="/local/eosnetworkfoundation/repos/reference-contracts/build/contracts"
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
-GENESIS_FILE="${SCRIPT_DIR}/../config/genesis.json"
+GENESIS_FILE="/local/eosnetworkfoundation/repos/bootstrap-private-network/config/genesis.json"
+CONFIG_FILE="/local/eosnetworkfoundation/repos/bootstrap-private-network/config/config.ini"
 
 echo "STARTING COMMAND ${COMMAND}"
 
@@ -56,7 +57,7 @@ if [ "$COMMAND" == "CREATE" ] || [ "$COMMAND" == "START" ]; then
     [ ! -d "$ROOT_DIR"/nodeos-two/data ] && mkdir -p "$ROOT_DIR"/nodeos-two/data
     [ ! -d "$ROOT_DIR"/nodeos-three/data ] && mkdir -p "$ROOT_DIR"/nodeos-three/data
     # setup common config, shared by all nodoes instances
-    cp "${SCRIPT_DIR}/../config/config.ini" ${ROOT_DIR}/config.ini
+    cp "${CONFIG_FILE}" ${ROOT_DIR}/config.ini
   fi
 
   # setup wallet
@@ -69,17 +70,18 @@ if [ "$COMMAND" == "CREATE" ] || [ "$COMMAND" == "START" ]; then
     nodeos --genesis-json ${ROOT_DIR}/genesis.json --agent-name "Finality Test Node One" \
       --http-server-address 0.0.0.0:${NODEOS_ONE_PORT} \
       --p2p-listen-endpoint 0.0.0.0:1444 \
-      --enable-stale-production \
+      --producer-name bpa \
       --signature-provider ${EOS_ROOT_PUBLIC_KEY}=KEY:${EOS_ROOT_PRIVATE_KEY} \
       --config "$ROOT_DIR"/config.ini \
       --data-dir "$ROOT_DIR"/nodeos-one/data \
       --p2p-peer-address 127.0.0.1:2444 \
       --p2p-peer-address 127.0.0.1:3444 > $LOG_DIR/nodeos-one.log 2>&1 &
   else
+    #--enable-stale-production \
     nodeos --agent-name "Finality Test Node One" \
       --http-server-address 0.0.0.0:${NODEOS_ONE_PORT} \
       --p2p-listen-endpoint 0.0.0.0:1444 \
-      --enable-stale-production \
+      --producer-name bpa \
       --signature-provider ${EOS_ROOT_PUBLIC_KEY}=KEY:${EOS_ROOT_PRIVATE_KEY} \
       --config "$ROOT_DIR"/config.ini \
       --data-dir "$ROOT_DIR"/nodeos-one/data \
@@ -91,6 +93,7 @@ if [ "$COMMAND" == "CREATE" ] || [ "$COMMAND" == "START" ]; then
   # create accounts, activate protocols, create tokens, set system contracts
   if [ "$COMMAND" == "CREATE" ]; then
     "$SCRIPT_DIR"/boot_actions.sh "$ENDPOINT" "$CONTRACT_DIR" "$EOS_ROOT_PUBLIC_KEY"
+    "$SCRIPT_DIR"/block_producer_schedule.sh "$ENDPOINT" "$EOS_ROOT_PUBLIC_KEY"
   fi
 
   # start nodeos two
@@ -99,6 +102,7 @@ if [ "$COMMAND" == "CREATE" ] || [ "$COMMAND" == "START" ]; then
     nodeos --genesis-json ${ROOT_DIR}/genesis.json --agent-name "Finality Test Node Two" \
       --http-server-address 0.0.0.0:6888 \
       --p2p-listen-endpoint 0.0.0.0:2444 \
+      --producer-name bpb \
       --signature-provider ${EOS_ROOT_PUBLIC_KEY}=KEY:${EOS_ROOT_PRIVATE_KEY} \
       --config "$ROOT_DIR"/config.ini \
       --data-dir "$ROOT_DIR"/nodeos-two/data \
@@ -108,6 +112,7 @@ if [ "$COMMAND" == "CREATE" ] || [ "$COMMAND" == "START" ]; then
     nodeos --agent-name "Finality Test Node Two" \
       --http-server-address 0.0.0.0:6888 \
       --p2p-listen-endpoint 0.0.0.0:2444 \
+      --producer-name bpb \
       --signature-provider ${EOS_ROOT_PUBLIC_KEY}=KEY:${EOS_ROOT_PRIVATE_KEY} \
       --config "$ROOT_DIR"/config.ini \
       --data-dir "$ROOT_DIR"/nodeos-two/data \
@@ -120,6 +125,7 @@ if [ "$COMMAND" == "CREATE" ] || [ "$COMMAND" == "START" ]; then
     nodeos --genesis-json ${ROOT_DIR}/genesis.json --agent-name "Finality Test Node Three" \
       --http-server-address 0.0.0.0:7888 \
       --p2p-listen-endpoint 0.0.0.0:3444 \
+      --producer-name bpc \
       --signature-provider ${EOS_ROOT_PUBLIC_KEY}=KEY:${EOS_ROOT_PRIVATE_KEY} \
       --config "$ROOT_DIR"/config.ini \
       --data-dir "$ROOT_DIR"/nodeos-three/data \
@@ -129,6 +135,7 @@ if [ "$COMMAND" == "CREATE" ] || [ "$COMMAND" == "START" ]; then
     nodeos --agent-name "Finality Test Node Three" \
       --http-server-address 0.0.0.0:7888 \
       --p2p-listen-endpoint 0.0.0.0:3444 \
+      --producer-name bpc \
       --signature-provider ${EOS_ROOT_PUBLIC_KEY}=KEY:${EOS_ROOT_PRIVATE_KEY} \
       --config "$ROOT_DIR"/config.ini \
       --data-dir "$ROOT_DIR"/nodeos-three/data \
