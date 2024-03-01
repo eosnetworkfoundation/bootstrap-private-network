@@ -65,36 +65,42 @@ if [ "$COMMAND" == "CREATE" ] || [ "$COMMAND" == "START" ]; then
   # Import Root Private Key
   cleos wallet import --name finality-test-network-wallet --private-key $EOS_ROOT_PRIVATE_KEY
 
-  # start nodeos
+  # start nodeos one always allow stale production
   if [ "$COMMAND" == "CREATE" ]; then
     nodeos --genesis-json ${ROOT_DIR}/genesis.json --agent-name "Finality Test Node One" \
       --http-server-address 0.0.0.0:${NODEOS_ONE_PORT} \
       --p2p-listen-endpoint 0.0.0.0:1444 \
-      --producer-name bpa \
+      --enable-stale-production \
+      --producer-name eosio \
       --signature-provider ${EOS_ROOT_PUBLIC_KEY}=KEY:${EOS_ROOT_PRIVATE_KEY} \
       --config "$ROOT_DIR"/config.ini \
       --data-dir "$ROOT_DIR"/nodeos-one/data \
       --p2p-peer-address 127.0.0.1:2444 \
       --p2p-peer-address 127.0.0.1:3444 > $LOG_DIR/nodeos-one.log 2>&1 &
-  else
-    #--enable-stale-production \
-    nodeos --agent-name "Finality Test Node One" \
-      --http-server-address 0.0.0.0:${NODEOS_ONE_PORT} \
-      --p2p-listen-endpoint 0.0.0.0:1444 \
-      --producer-name bpa \
-      --signature-provider ${EOS_ROOT_PUBLIC_KEY}=KEY:${EOS_ROOT_PRIVATE_KEY} \
-      --config "$ROOT_DIR"/config.ini \
-      --data-dir "$ROOT_DIR"/nodeos-one/data \
-      --p2p-peer-address 127.0.0.1:2444 \
-      --p2p-peer-address 127.0.0.1:3444 > $LOG_DIR/nodeos-one.log 2>&1 &
-  fi
-  sleep 1
+    NODEOS_ONE_PID=$1
 
-  # create accounts, activate protocols, create tokens, set system contracts
-  if [ "$COMMAND" == "CREATE" ]; then
+    # create accounts, activate protocols, create tokens, set system contracts
+    sleep 1
     "$SCRIPT_DIR"/boot_actions.sh "$ENDPOINT" "$CONTRACT_DIR" "$EOS_ROOT_PUBLIC_KEY"
     "$SCRIPT_DIR"/block_producer_schedule.sh "$ENDPOINT" "$EOS_ROOT_PUBLIC_KEY"
+    sleep 1
+    kill -15 $NODEOS_ONE_PID
   fi
+
+  # if CREATE we bootstraped the node and killed it
+  # if START we have no node running
+  # either way we need to start Node One
+  nodeos --agent-name "Finality Test Node One" \
+    --http-server-address 0.0.0.0:${NODEOS_ONE_PORT} \
+    --p2p-listen-endpoint 0.0.0.0:1444 \
+    --enable-stale-production \
+    --producer-name bpa \
+    --signature-provider ${EOS_ROOT_PUBLIC_KEY}=KEY:${EOS_ROOT_PRIVATE_KEY} \
+    --config "$ROOT_DIR"/config.ini \
+    --data-dir "$ROOT_DIR"/nodeos-one/data \
+    --p2p-peer-address 127.0.0.1:2444 \
+    --p2p-peer-address 127.0.0.1:3444 > $LOG_DIR/nodeos-one.log 2>&1 &
+
 
   # start nodeos two
   sleep 5
