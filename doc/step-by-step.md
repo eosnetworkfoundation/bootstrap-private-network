@@ -14,7 +14,7 @@ https://github.com/eosnetworkfoundation/bootstrap-private-network/blob/main/Ante
 You will need to build the following Antelope software from source, using the specified git tags or commit hashes. The software should be built in the following order to satisfy dependancies `Leap`, followed by `CDT`, followed by `Reference Contracts`.
 
 These Git Commit Hashes or Tags are current to the following date.
-https://github.com/eosnetworkfoundation/bootstrap-private-network/blob/main/bin/docker-build-image.sh#L4
+https://github.com/eosnetworkfoundation/bootstrap-private-network/blob/main/bin/docker-build-image.sh#L3
 
 ### Leap
 Latest Git Commit or Tag
@@ -30,12 +30,12 @@ https://github.com/eosnetworkfoundation/bootstrap-private-network/blob/main/Ante
 
 ### Reference Contract
 Latest Git Commit or Tag
-https://github.com/eosnetworkfoundation/bootstrap-private-network/blob/main/AntelopeDocker#L46
+https://github.com/eosnetworkfoundation/bootstrap-private-network/blob/main/AntelopeDocker#L52
 
 [Full Instructions for Building Refereence Contracts](https://github.com/antelopeio/reference-contracts?tab=readme-ov-file#building) or you can review [Reference Script to Build Contracts](/bin/build_eos_contracts.sh).
 
 ## Install Antelope Software
-Now that the binaries are build you need to add them to your path or install them into well know locations. The [Reference Install Script](bin/install_antelope_software.sh) must be run as root and has one way to install the software.
+Now that the binaries are build you need to add them to your path or install them into well know locations. The [Reference Install Script](/bin/install_antelope_software.sh) must be run as root and has one way to install the software.
 
 Note, the `Reference Contracts` as install later during the initialization of the EOS blockchain.
 
@@ -45,7 +45,7 @@ Before we can start up our multi-producer blockchain a few preperations are need
 We will create a new key pair for the root user of the blockchain. You will use the Public Key often in the setup, so please save these keys for use later. You will see a `PublicKey` and `PrivateKey` printed to the console using the following command.
 `cleos create key --to-console`
 #### `Create Genesis File`
-Take the reference [Genesis File](config/genesis.json) and replace the value for `Initial Key` with the `PublicKey` generated previously. Replace the the value for `Initial Timestamp` with now. In linux you can get the correct format for the date with the following command `date +%FT%T.%3N`.
+Take the reference [Genesis File](/config/genesis.json) and replace the value for `Initial Key` with the `PublicKey` generated previously. Replace the the value for `Initial Timestamp` with now. In linux you can get the correct format for the date with the following command `date +%FT%T.%3N`.
 #### `Create Shared Config`
 We will create a shared config file for the common configuration values. Configuration here is only for preview development purposes and should not be used as a reference production config. Copy [config.ini](/config/config.ini) to your filesystem. Additional configuration values will be added on the command line.
 #### `Create Log and Data Dir`
