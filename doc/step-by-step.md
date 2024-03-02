@@ -2,7 +2,7 @@
 
 ## Environment
 
-Many linux OS will work, these instructions have been validates on `ubuntu 22.04`.
+Many linux OS will work, these instructions have been validated on `ubuntu 22.04`.
 
 ### Prerequisites
 Apt-get and install the following
@@ -70,18 +70,26 @@ https://github.com/eosnetworkfoundation/bootstrap-private-network/blob/main/bin/
 One the node is running we need to run two scripts to add accounts, permissions, and contracts.
 - boot actions
 - block producer schedule
-[boot_actions.sh](/bin/boot_actions.sh) is the reference script. You pass in the following values, reference contracts is your locale git repository where you build the reference contracts software.  
+
+[boot_actions.sh](/bin/boot_actions.sh) is the reference script. You pass in the following values, reference contracts is your locale git repository where you build the reference contracts software.
+
 - 127.0.0.1:8888
 - $DIR/reference-contracts/build/contracts
 - PublicKey
+
 [block_producer_schedule](/bin/block_producer_schedule.sh) is the reference script. You pass in the following values
+
 - 127.0.0.1:8888
 - PublicKey
+
 #### `Shutdown`
 Now that we have initialized our first instance we need to shut it down and restart. Find the pid and send `kill -15 $pid` to terminate the instance.
 
 ## Create Network
 Now we start our three nodes peer'd to each other. The Second and Third nodes will start from genesis and pull updates from the First node. The First nodes has already been initialized and it will start from its existing state. Soon each node will have the same information and the same head block number.
+
+In the examples below the `PublicKey` and `PrivateKey` have the same values.
+
 #### `Node One`
 https://github.com/eosnetworkfoundation/bootstrap-private-network/blob/a52d8389cc604464c3a5053d3e99e914eb0f502f/bin/finality_test_network.sh#L91-L100
 #### `Node Two`
@@ -99,7 +107,7 @@ TBD
 generate three using leap-util
 
 #### `Apply Finalizer Key`
-`cleos push action eosio setfinalizer` with `setfinalizer_policy` json 
+`cleos push action eosio setfinalizer` with `setfinalizer_policy` json
 
 ## Verify Faster Finality
 Here you can check the Head Block Number and Last Irreversible Block and see they are one apart. `cleos get info`
