@@ -81,3 +81,25 @@ One the node is running we need to run two scripts to add accounts, permissions,
 Now that we have initialized our first instance we need to shut it down and restart. Find the pid and send `kill -15 $pid` to terminate the instance.
 
 ## Create Network
+Now we start our three nodes peer'd to each other. The Second and Third nodes will start from genesis and pull updates from the First node. The First nodes has already been initialized and it will start from its existing state. Soon each node will have the same information and the same head block number.
+#### `Node One`
+https://github.com/eosnetworkfoundation/bootstrap-private-network/blob/a52d8389cc604464c3a5053d3e99e914eb0f502f/bin/finality_test_network.sh#L91-L100
+#### `Node Two`
+https://github.com/eosnetworkfoundation/bootstrap-private-network/blob/a52d8389cc604464c3a5053d3e99e914eb0f502f/bin/finality_test_network.sh#L105-L113
+#### `Node Three`
+https://github.com/eosnetworkfoundation/bootstrap-private-network/blob/a52d8389cc604464c3a5053d3e99e914eb0f502f/bin/finality_test_network.sh#L128-L136
+
+## Check Blocks Behind
+Here you can check the Head Block Number and Last Irreversible Block and see there are far apart. `cleos get info`
+
+## Active Savana
+
+TBD
+#### `Generate Finalizer Keys`
+generate three using leap-util
+
+#### `Apply Finalizer Key`
+`cleos push action eosio setfinalizer` with `setfinalizer_policy` json 
+
+## Verify Faster Finality
+Here you can check the Head Block Number and Last Irreversible Block and see they are one apart. `cleos get info`
