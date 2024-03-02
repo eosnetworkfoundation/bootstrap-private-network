@@ -16,19 +16,19 @@ graph LR;
 
 ## Quick Start Guide
 
-Build Docker Image
+- Build Docker Image
 `./bin/docker-build-image.sh`
-Start Docker Container with Image
+- Start Docker Container with Image
 `./bin/docker-create-container.sh`
-Enter the Container
+- Enter the Container
 `./bin/docker-enter-container.sh`
-Setup Antelope Network
+- Setup Antelope Network
 `/local/eosnetworkfoundation/repos/bootstrap-private-network/bin/finality_test_network.sh CREATE`
-See Last Irreversible Block is many blocks behind Head Block
+- See Last Irreversible Block is many blocks behind Head Block
 `cleos get info`
-Activate Savanna
+- Activate Savanna
 `/local/eosnetworkfoundation/repos/bootstrap-private-network/bin/finality_test_network.sh SAVANNA`
-See Last Irreversible Block is *-->one<--* block behind Head Block
+- See Last Irreversible Block is *-->one<--* block behind Head Block
 `cleos get info`
 
 ## Step By Step Documentation
