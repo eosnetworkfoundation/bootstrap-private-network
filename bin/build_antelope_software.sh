@@ -8,7 +8,7 @@
 
 LEAP_GIT_COMMIT_TAG=${1:-hotstuff_integration}
 CDT_GIT_COMMIT_TAG=${2:-hotstuff_integration}
-NPROC=${4:-$(nproc)}
+NPROC=${3:-$(nproc)}
 TUID=$(id -ur)
 
 # must not be root to run

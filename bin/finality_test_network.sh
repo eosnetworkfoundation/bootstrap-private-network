@@ -74,9 +74,7 @@ if [ "$COMMAND" == "CREATE" ] || [ "$COMMAND" == "START" ]; then
       --producer-name eosio \
       --signature-provider ${EOS_ROOT_PUBLIC_KEY}=KEY:${EOS_ROOT_PRIVATE_KEY} \
       --config "$ROOT_DIR"/config.ini \
-      --data-dir "$ROOT_DIR"/nodeos-one/data \
-      --p2p-peer-address 127.0.0.1:2444 \
-      --p2p-peer-address 127.0.0.1:3444 > $LOG_DIR/nodeos-one.log 2>&1 &
+      --data-dir "$ROOT_DIR"/nodeos-one/data > $LOG_DIR/nodeos-one.log 2>&1 &
     NODEOS_ONE_PID=$1
 
     # create accounts, activate protocols, create tokens, set system contracts
@@ -100,7 +98,6 @@ if [ "$COMMAND" == "CREATE" ] || [ "$COMMAND" == "START" ]; then
     --data-dir "$ROOT_DIR"/nodeos-one/data \
     --p2p-peer-address 127.0.0.1:2444 \
     --p2p-peer-address 127.0.0.1:3444 > $LOG_DIR/nodeos-one.log 2>&1 &
-
 
   # start nodeos two
   sleep 5

@@ -1,6 +1,8 @@
-# Purpose
+# Use Cases
 
-There are two purposes to this repository. The primary purpose is to act as a reference implementation of the Savanna algorithm. The reference includes the following:
+## Purpose
+
+There are two purposes to this repository. The primary purpose is to act as a developer reference for the Savanna algorithm. The reference includes the following:
 - The git commit level for Antelope Software.
    - Leap
    - CDT
@@ -14,6 +16,10 @@ The second purpose is to create an early access release for the developer commun
 - Local dev setup showing faster finality through log examination
 - Local dev setup to connect and test SDKs
 
+## Non-Goals
+
+This reference does not provide advice on how to setup or run a production network. None of the configuration settings, nor setup details are recommended for a production setup.
+
 ## Use Cases
 
 ### Reference Implementation
@@ -25,9 +31,6 @@ Fully scripting the end-2-end build, install, and setup of software is difficult
 Hopefully, this reference implementation would allow developers to connect their SDKs and try out the new **Savanna** protocol. Other test networks may have patches or non-standard configurations to work around issues or provide temporary backwards compatibility. A true reference implementation will act as the most current thinking. In addition by providing named git tags for each release of this repo, there will be named versions across Antelope software chain. These named versions should be used by the community to specify the version of the Antelope software stack they are using, and for reporting any issues.
 
 In addition, a local test network can be setup to have looser resource rules, allowing longer tests. Having looser resource rules is nice when trying out something new. It allows for faster iterations.
-
-## Need Help *[EP - Ephemeral Section to be deleted]*
-Currently I have build the software, installed it, and created a Docker image. I am stuck creating the multi-producer network. The nodes aren't syncing, and depending on the configuration I get incomplete handshakes or un-linkable blocks. I'm unable to find documentation on creating a private multi-producer network, and most likely running into configuration issues.  
 
 ## Technical Approach
 Using Docker allow the separation of concerns. The Docker build step can download the source code, build the software, and cache the results. Once the Docker image is built is can be used many times to start **Savanna** compatible versions of **Leap**, **CDT**, and **Reference Contracts**. This repo will provide the scripts to build the docker image.

@@ -42,8 +42,11 @@ RUN git clone https://github.com/AntelopeIO/reference-contracts.git
 RUN git clone https://github.com/eosnetworkfoundation/eos-system-contracts.git
 RUN git clone https://github.com/eosnetworkfoundation/bootstrap-private-network.git
 WORKDIR /local/eosnetworkfoundation/repos/bootstrap-private-network
-RUN /local/eosnetworkfoundation/repos/bootstrap-private-network/bin/build_antelope_software.sh
+RUN /local/eosnetworkfoundation/repos/bootstrap-private-network/bin/build_antelope_software.sh \
+    49c96a20392993c291cfd03b731759c6c6ca2bef \
+    b1eacc8b9f7cf3a4fc7c0218b0f1fb506727eca3
 USER root
 RUN /local/eosnetworkfoundation/repos/bootstrap-private-network/bin/install_antelope_software.sh
 USER enfuser
-RUN /local/eosnetworkfoundation/repos/bootstrap-private-network/bin/build_eos_contracts.sh
+RUN /local/eosnetworkfoundation/repos/bootstrap-private-network/bin/build_eos_contracts.sh \
+   469e1b3a822d6efbe5cb9422250f23eb6ce7ef7c
