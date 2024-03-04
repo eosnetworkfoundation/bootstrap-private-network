@@ -112,9 +112,9 @@ Save the output from the command. The public and private keys will be added as `
 - BLS Proof of possession signatures start with `SIG_BLS_`
 
 ```
-"signature-provider = ""${NODE_ONE_PUBLIC_KEY}""=KEY:""${NODE_ONE_PRIVATE_KEY}" >> config.ini
-"signature-provider = ""${NODE_TWO_PUBLIC_KEY}""=KEY:""${NODE_TWO_PRIVATE_KEY}" >> config.ini
-"signature-provider = ""${NODE_THREE_PUBLIC_KEY}""=KEY:""${NODE_THREE_PRIVATE_KEY}" >> config.ini
+echo "signature-provider = ""${NODE_ONE_PUBLIC_KEY}""=KEY:""${NODE_ONE_PRIVATE_KEY}" >> config.ini
+echo "signature-provider = ""${NODE_TWO_PUBLIC_KEY}""=KEY:""${NODE_TWO_PRIVATE_KEY}" >> config.ini
+echo "signature-provider = ""${NODE_THREE_PUBLIC_KEY}""=KEY:""${NODE_THREE_PRIVATE_KEY}" >> config.ini
 ```
 
 #### `Apply New Configuration`
