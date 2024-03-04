@@ -75,7 +75,7 @@ if [ "$COMMAND" == "CREATE" ] || [ "$COMMAND" == "START" ]; then
       --signature-provider ${EOS_ROOT_PUBLIC_KEY}=KEY:${EOS_ROOT_PRIVATE_KEY} \
       --config "$ROOT_DIR"/config.ini \
       --data-dir "$ROOT_DIR"/nodeos-one/data > $LOG_DIR/nodeos-one.log 2>&1 &
-    NODEOS_ONE_PID=$1
+    NODEOS_ONE_PID=$!
 
     # create accounts, activate protocols, create tokens, set system contracts
     sleep 1
@@ -83,6 +83,8 @@ if [ "$COMMAND" == "CREATE" ] || [ "$COMMAND" == "START" ]; then
     "$SCRIPT_DIR"/block_producer_schedule.sh "$ENDPOINT" "$EOS_ROOT_PUBLIC_KEY"
     sleep 1
     kill -15 $NODEOS_ONE_PID
+    # wait for shutdown
+    sleep 15
   fi
 
   # if CREATE we bootstraped the node and killed it
