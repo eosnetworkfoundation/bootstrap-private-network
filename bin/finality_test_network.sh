@@ -18,24 +18,22 @@ SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 GENESIS_FILE="/local/eosnetworkfoundation/repos/bootstrap-private-network/config/genesis.json"
 CONFIG_FILE="/local/eosnetworkfoundation/repos/bootstrap-private-network/config/config.ini"
 
-echo "STARTING COMMAND ${COMMAND}"
+######
+# Stop Function to shutdown all nodes
+#####
+stop_func() {
+  MY_ID=$(id -u)
+  for p in $(ps -u $MY_ID | grep nodeos | sed -e 's/^[[:space:]]*//' | cut -d" " -f1); do
+    echo $p && kill -15 $p
+  done
+}
+### END STOP Command
 
-if [ "$COMMAND" == "NA" ]; then
-  echo "usage: finality_test_network.sh [CREATE|START|CLEAN|STOP|SAVANNA]"
-  exit 1
-fi
-
-if [ "$COMMAND" == "CLEAN" ]; then
-    for d in nodeos-one nodeos-two nodeos-three; do
-        [ -f "$ROOT_DIR"/${d}/data/blocks/blocks.log ] && rm -f "$ROOT_DIR"/${d}/data/blocks/blocks.log
-        [ -f "$ROOT_DIR"/${d}/data/blocks/blocks.index ] && rm -f "$ROOT_DIR"/${d}/data/blocks/blocks.index
-        [ -f "$ROOT_DIR"/${d}/data/state/shared_memory.bin ] && rm -f "$ROOT_DIR"/${d}/data/state/shared_memory.bin
-        [ -f "$ROOT_DIR"/${d}/data/state/code_cache.bin ] && rm -f "$ROOT_DIR"/${d}/data/state/code_cache.bin
-        [ -f "$ROOT_DIR"/${d}/data/blocks/reversible/fork_db.dat ] && rm -f "$ROOT_DIR"/${d}/data/blocks/reversible/fork_db.dat
-    done
-fi
-
-if [ "$COMMAND" == "CREATE" ] || [ "$COMMAND" == "START" ]; then
+#####
+# START/CREATE Function to startup all nodes
+####
+start_func() {
+  COMMAND=$1
   # get config information
   NODEOS_ONE_PORT=8888
   ENDPOINT="http://127.0.0.1:${NODEOS_ONE_PORT}"
@@ -151,22 +149,69 @@ if [ "$COMMAND" == "CREATE" ] || [ "$COMMAND" == "START" ]; then
       --p2p-peer-address 127.0.0.1:1444 \
       --p2p-peer-address 127.0.0.1:2444 > $LOG_DIR/nodeos-three.log 2>&1 &
   fi
+}
+## end START/CREATE COMMAND
+
+echo "STARTING COMMAND ${COMMAND}"
+
+if [ "$COMMAND" == "NA" ]; then
+  echo "usage: finality_test_network.sh [CREATE|START|CLEAN|STOP|SAVANNA]"
+  exit 1
+fi
+
+if [ "$COMMAND" == "CLEAN" ]; then
+    for d in nodeos-one nodeos-two nodeos-three; do
+        [ -f "$ROOT_DIR"/${d}/data/blocks/blocks.log ] && rm -f "$ROOT_DIR"/${d}/data/blocks/blocks.log
+        [ -f "$ROOT_DIR"/${d}/data/blocks/blocks.index ] && rm -f "$ROOT_DIR"/${d}/data/blocks/blocks.index
+        [ -f "$ROOT_DIR"/${d}/data/state/shared_memory.bin ] && rm -f "$ROOT_DIR"/${d}/data/state/shared_memory.bin
+        [ -f "$ROOT_DIR"/${d}/data/state/code_cache.bin ] && rm -f "$ROOT_DIR"/${d}/data/state/code_cache.bin
+        [ -f "$ROOT_DIR"/${d}/data/blocks/reversible/fork_db.dat ] && rm -f "$ROOT_DIR"/${d}/data/blocks/reversible/fork_db.dat
+    done
+fi
+
+if [ "$COMMAND" == "CREATE" ] || [ "$COMMAND" == "START" ]; then
+  start_func $COMMAND
 fi
 
 if [ "$COMMAND" == "STOP" ]; then
-  MY_ID=$(id -u)
-  for p in $(ps -u $MY_ID | grep nodeos | sed -e 's/^[[:space:]]*//' | cut -d" " -f1); do
-    echo $p && kill -15 $p
-  done
+  stop_func
 fi
 
 if [ "$COMMAND" == "SAVANNA" ]; then
   # get config information
   NODEOS_ONE_PORT=8888
   ENDPOINT="http://127.0.0.1:${NODEOS_ONE_PORT}"
+
+  echo "creating new finalizer BLS keys"
+  PUBLIC_KEY=()
+  PROOF_POSSESION=()
+  # three producers
+  for producer_name in bpa bpb bpc
+  do
+    leap-util bls create key --to-console > "${WALLET_DIR:?}"/"${producer_name}.finalizer.key"
+    PUBLIC_KEY+=( $(grep Public "${WALLET_DIR}"/"${producer_name}.finalizer.key" | cut -d: -f2 | sed 's/ //g') ) \
+      || exit 127
+    PROOF_POSSESION+=( $(grep Possession "${WALLET_DIR}"/"${producer_name}.finalizer.key" | cut -d: -f2 | sed 's/ //g') ) \
+      || exit 127
+    echo "# producer ${producer_name} finalizer key" >> "$CONFIG_FILE"
+    echo "signature-provider = ""${PUBLIC_KEY[@]: -1}" >> "$CONFIG_FILE"
+  done
+
+  echo "need to reload config: please wait shutting down node"
+  stop_func
+  sleep 60
+  echo "need to reload config: please wait startu up nodes"
+  start_func "START"
+  sleep 60
+
+  echo "running final command to activate finality"
   # open wallet
   "$SCRIPT_DIR"/open_wallet.sh "$WALLET_DIR"
-  "$SCRIPT_DIR"/activate_savanna.sh "$ENDPOINT" "$WALLET_DIR" "${ROOT_DIR}/config.ini"
+  # array will expand to multiple arguments on receiving side
+  "$SCRIPT_DIR"/activate_savanna.sh "$ENDPOINT" "${PUBLIC_KEY[@]}" "${PROOF_POSSESION[@]}"
 fi
+
+echo "waiting for network production to sync up..."
+sleep 60
 
 echo "COMPLETED COMMAND ${COMMAND}"

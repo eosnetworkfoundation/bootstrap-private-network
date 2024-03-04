@@ -8,21 +8,13 @@
 ####
 
 ENDPOINT=$1
-WALLET_DIR=$2
-CONFIG_FILE=$3
+BPA_PUBLIC_KEY=$2
+BPB_PUBLIC_KEY=$3
+BPC_PUBLIC_KEY=$4
+BPA_PROOF_POSSESION=$5
+BPB_PROOF_POSSESION=$6
+BPC_PROOF_POSSESION=$7
 
-PUBLIC_KEY=()
-PROOF_POSSESION=()
-# three producers
-for producer_name in bpa bpb bpc
-do
-  leap-util bls create key --to-console > "${WALLET_DIR:?}"/"${producer_name}.finalizer.key"
-  PUBLIC_KEY+=( $(grep Public "${WALLET_DIR}"/"${producer_name}.finalizer.key" | cut -d: -f2 | sed 's/ //g') ) \
-    || exit 127
-  PROOF_POSSESION+=( $(grep Possession "${WALLET_DIR}"/"${producer_name}.finalizer.key" | cut -d: -f2 | sed 's/ //g') ) \
-    || exit 127
-  echo "signature-provider = ""${PUBLIC_KEY[@]: -1}" >> "$CONFIG_FILE"
-done
 
 # unwindw our three producer finalizer keys and make activating call
 cleos --url $ENDPOINT push action eosio setfinalizer "{
@@ -32,20 +24,20 @@ cleos --url $ENDPOINT push action eosio setfinalizer "{
       {
         \"description\": \"bpa\",
         \"weight\": 1,
-        \"public_key\": \"${PUBLIC_KEY[0]}\",
-        \"pop\": \"${PROOF_POSSESION[0]}\"
+        \"public_key\": \"${BPA_PUBLIC_KEY}\",
+        \"pop\": \"${BPA_PROOF_POSSESION}\"
       },
       {
         \"description\": \"bpb\",
         \"weight\": 1,
-        \"public_key\": \"${PUBLIC_KEY[1]}\",
-        \"pop\": \"${PROOF_POSSESION[1]}\"
+        \"public_key\": \"${BPB_PUBLIC_KEY}\",
+        \"pop\": \"${BPB_PROOF_POSSESION}\"
       },
       {
         \"description\": \"bpc\",
         \"weight\": 1,
-        \"public_key\": \"${PUBLIC_KEY[2]}\",
-        \"pop\": \"${PROOF_POSSESION[2]}\"
+        \"public_key\": \"${BPC_PUBLIC_KEY}\",
+        \"pop\": \"${BPC_PROOF_POSSESION}\"
       }
     ]
   }
