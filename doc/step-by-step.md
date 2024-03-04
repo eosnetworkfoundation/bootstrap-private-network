@@ -101,13 +101,38 @@ https://github.com/eosnetworkfoundation/bootstrap-private-network/blob/a52d8389c
 Here you can check the Head Block Number and Last Irreversible Block and see there are far apart. `cleos get info`
 
 ## Active Savana
+For the last step we will activate the new Savanna algorithm.
 
-TBD
 #### `Generate Finalizer Keys`
-generate three using leap-util
+We need to generate the new BLS finalizer keys and add them to our configuration file. Each producer needs to generate a finalizer key. We have three nodes and that requires calling `leap-util bls create key` three times.
+`leap-util bls create key --to-console`
+Save the output from the command. The public and private keys will be added as `signiture-provided` lines to `config.ini`. This configuration file is shared across all three instances and each instance will have all three lines.
+- BLS Public keys start with `PUB_BLS_`
+- BLS Private keys start with `PVT_BLS_`
+- BLS Proof of possession signatures start with `SIG_BLS_`
+
+```
+"signature-provider = ""${NODE_ONE_PUBLIC_KEY}""=KEY:""${NODE_ONE_PRIVATE_KEY}" >> config.ini
+"signature-provider = ""${NODE_TWO_PUBLIC_KEY}""=KEY:""${NODE_TWO_PRIVATE_KEY}" >> config.ini
+"signature-provider = ""${NODE_THREE_PUBLIC_KEY}""=KEY:""${NODE_THREE_PRIVATE_KEY}" >> config.ini
+```
+
+#### `Apply New Configuration`
+Now that the configuration is in the shared `config.ini` we need to stop and re-start all three nodes to load the new configuration. Find the pid and send `kill -15 $pid` to terminate all three instances. Now start up the nodes. Here are examples from our reference development script. The `signature-provided` argument on the command line is the [EOS Root Key Pair](/doc/step-by-step.md#create-new-key-pair) we created earlier, and it is still needed for this restart step.
+
+https://github.com/eosnetworkfoundation/bootstrap-private-network/blob/c1cba8825c5378f147dc70b8386ad3a61df86585/bin/finality_test_network.sh#L95-L104
+
+https://github.com/eosnetworkfoundation/bootstrap-private-network/blob/c1cba8825c5378f147dc70b8386ad3a61df86585/bin/finality_test_network.sh#L120-L128
+
+https://github.com/eosnetworkfoundation/bootstrap-private-network/blob/c1cba8825c5378f147dc70b8386ad3a61df86585/bin/finality_test_network.sh#L144-L152
+
 
 #### `Apply Finalizer Key`
-`cleos push action eosio setfinalizer` with `setfinalizer_policy` json
+`cleos push action eosio setfinalizer` with `setfinalizer_policy` json. In the developer example below we have three producers. The threshold value should be 2/3 of the weights across all the finalizers listed. Once this command is run, the new Savanna algorithm is activated.
 
-## Verify Faster Finality
-Here you can check the Head Block Number and Last Irreversible Block and see they are one apart. `cleos get info`
+https://github.com/eosnetworkfoundation/bootstrap-private-network/blob/c1cba8825c5378f147dc70b8386ad3a61df86585/bin/activate_savanna.sh#L20-L44
+
+#### `Verify Faster Finality`
+Here you can check the Head Block Number and Last Irreversible Block and see they are three apart. `cleos get info`
+
+Congratulations you are running a Private EOS network with the new, faster finality, Savanna algorithm.

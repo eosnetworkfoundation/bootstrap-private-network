@@ -24,12 +24,17 @@ graph LR;
 `./bin/docker-enter-container.sh`
 - Setup Antelope Network
 `/local/eosnetworkfoundation/repos/bootstrap-private-network/bin/finality_test_network.sh CREATE`
-- See Last Irreversible Block is many blocks behind Head Block
+- See `last_irreversible_block_num` is many blocks behind `head_block_num`
 `cleos get info`
+
+The `last irreversible block` has been agreed to by the network, and can not be changed. This represents the last step in finalizing work across all the nodes. The head block has committed transactions that may be changed in the event of a bad actor, and error, or other synchronization issue.
+
 - Activate Savanna
 `/local/eosnetworkfoundation/repos/bootstrap-private-network/bin/finality_test_network.sh SAVANNA`
-- See Last Irreversible Block is *-->one<--* block behind Head Block
+- See Last Irreversible Block is *-->three<--* block behind Head Block
 `cleos get info`
+
+The new algorithm is finalizing blocks faster. Even as producers scale up the SAVANNA algorithm will maintain the same 3 block delta between the `last_irreversible_block_num` and the `head_block_num`.
 
 ## Step By Step Documentation
 See [Step By Step](doc/step-by-step.md)

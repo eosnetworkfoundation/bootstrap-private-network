@@ -196,10 +196,12 @@ if [ "$COMMAND" == "SAVANNA" ]; then
     leap-util bls create key --to-console > "${WALLET_DIR:?}"/"${producer_name}.finalizer.key"
     PUBLIC_KEY+=( $(grep Public "${WALLET_DIR}"/"${producer_name}.finalizer.key" | cut -d: -f2 | sed 's/ //g') ) \
       || exit 127
+    PRIVATE_KEY+=( $(grep Private "${WALLET_DIR}"/"${producer_name}.finalizer.key" | cut -d: -f2 | sed 's/ //g') ) \
+      || exit 127
     PROOF_POSSESION+=( $(grep Possession "${WALLET_DIR}"/"${producer_name}.finalizer.key" | cut -d: -f2 | sed 's/ //g') ) \
       || exit 127
     echo "# producer ${producer_name} finalizer key" >> "$ROOT_DIR"/config.ini
-    echo "signature-provider = ""${PUBLIC_KEY[@]: -1}" >> "$ROOT_DIR"/config.ini
+    echo "signature-provider = ""${PUBLIC_KEY[@]: -1}""=KEY:""${PRIVATE_KEY[@]: -1}" >> "$ROOT_DIR"/config.ini
   done
 
   echo "need to reload config: please wait shutting down node"
