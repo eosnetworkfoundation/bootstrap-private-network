@@ -21,7 +21,7 @@ CONFIG_FILE="/local/eosnetworkfoundation/repos/bootstrap-private-network/config/
 echo "STARTING COMMAND ${COMMAND}"
 
 if [ "$COMMAND" == "NA" ]; then
-  echo "usage: finality_test_network.sh [CREATE|START|CLEAN|STOP]"
+  echo "usage: finality_test_network.sh [CREATE|START|CLEAN|STOP|SAVANNA]"
   exit 1
 fi
 
@@ -155,6 +155,15 @@ if [ "$COMMAND" == "STOP" ]; then
   for p in $(ps -u $MY_ID | grep nodeos | sed -e 's/^[[:space:]]*//' | cut -d" " -f1); do
     echo $p && kill -15 $p
   done
+fi
+
+if [ "$COMMAND" == "SAVANNA" ]; then
+  # get config information
+  NODEOS_ONE_PORT=8888
+  ENDPOINT="http://127.0.0.1:${NODEOS_ONE_PORT}"
+  # open wallet
+  "$SCRIPT_DIR"/open_wallet.sh "$WALLET_DIR"
+  "$SCRIPT_DIR"/activate_savanna.sh "$ENDPOINT" "$WALLET_DIR"
 fi
 
 echo "COMPLETED COMMAND ${COMMAND}"
