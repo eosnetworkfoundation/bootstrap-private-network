@@ -26,6 +26,8 @@ stop_func() {
   for p in $(ps -u $MY_ID | grep nodeos | sed -e 's/^[[:space:]]*//' | cut -d" " -f1); do
     echo $p && kill -15 $p
   done
+  echo "waiting for production network to quiesce..."
+  sleep 60
 }
 ### END STOP Command
 
@@ -149,6 +151,9 @@ start_func() {
       --p2p-peer-address 127.0.0.1:1444 \
       --p2p-peer-address 127.0.0.1:2444 > $LOG_DIR/nodeos-three.log 2>&1 &
   fi
+
+  echo "waiting for production network to sync up..."
+  sleep 60
 }
 ## end START/CREATE COMMAND
 
@@ -199,10 +204,8 @@ if [ "$COMMAND" == "SAVANNA" ]; then
 
   echo "need to reload config: please wait shutting down node"
   stop_func
-  sleep 60
   echo "need to reload config: please wait startu up nodes"
   start_func "START"
-  sleep 60
 
   echo "running final command to activate finality"
   # open wallet
@@ -210,8 +213,5 @@ if [ "$COMMAND" == "SAVANNA" ]; then
   # array will expand to multiple arguments on receiving side
   "$SCRIPT_DIR"/activate_savanna.sh "$ENDPOINT" "${PUBLIC_KEY[@]}" "${PROOF_POSSESION[@]}"
 fi
-
-echo "waiting for network production to sync up..."
-sleep 60
 
 echo "COMPLETED COMMAND ${COMMAND}"
