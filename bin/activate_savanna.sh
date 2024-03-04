@@ -9,6 +9,7 @@
 
 ENDPOINT=$1
 WALLET_DIR=$2
+CONFIG_FILE=$3
 
 PUBLIC_KEY=()
 PROOF_POSSESION=()
@@ -20,6 +21,7 @@ do
     || exit 127
   PROOF_POSSESION+=( $(grep Possession "${WALLET_DIR}"/"${producer_name}.finalizer.key" | cut -d: -f2 | sed 's/ //g') ) \
     || exit 127
+  echo "signature-provider = ""${PUBLIC_KEY[@]: -1}" >> "$CONFIG_FILE"
 done
 
 # unwindw our three producer finalizer keys and make activating call

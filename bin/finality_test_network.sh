@@ -166,7 +166,7 @@ if [ "$COMMAND" == "SAVANNA" ]; then
   ENDPOINT="http://127.0.0.1:${NODEOS_ONE_PORT}"
   # open wallet
   "$SCRIPT_DIR"/open_wallet.sh "$WALLET_DIR"
-  "$SCRIPT_DIR"/activate_savanna.sh "$ENDPOINT" "$WALLET_DIR"
+  "$SCRIPT_DIR"/activate_savanna.sh "$ENDPOINT" "$WALLET_DIR" "${ROOT_DIR}/config.ini"
 fi
 
 echo "COMPLETED COMMAND ${COMMAND}"
