@@ -81,7 +81,8 @@ if [ "$COMMAND" == "CREATE" ] || [ "$COMMAND" == "START" ]; then
     sleep 1
     "$SCRIPT_DIR"/boot_actions.sh "$ENDPOINT" "$CONTRACT_DIR" "$EOS_ROOT_PUBLIC_KEY"
     "$SCRIPT_DIR"/block_producer_schedule.sh "$ENDPOINT" "$EOS_ROOT_PUBLIC_KEY"
-    sleep 1
+    # need a long sleep here to allow time for new production schedule to settle
+    sleep 60
     kill -15 $NODEOS_ONE_PID
     # wait for shutdown
     sleep 15
