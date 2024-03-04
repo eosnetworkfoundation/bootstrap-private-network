@@ -25,7 +25,7 @@ done
 # unwindw our three producer finalizer keys and make activating call
 cleos --url $ENDPOINT push action eosio setfinalizer "{
   \"finalizer_policy\": {
-    \"threshold\": 3,
+    \"threshold\": 2,
     \"finalizers\": [
       {
         \"description\": \"bpa\",

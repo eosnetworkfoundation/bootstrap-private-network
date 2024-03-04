@@ -82,6 +82,7 @@ if [ "$COMMAND" == "CREATE" ] || [ "$COMMAND" == "START" ]; then
     "$SCRIPT_DIR"/boot_actions.sh "$ENDPOINT" "$CONTRACT_DIR" "$EOS_ROOT_PUBLIC_KEY"
     "$SCRIPT_DIR"/block_producer_schedule.sh "$ENDPOINT" "$EOS_ROOT_PUBLIC_KEY"
     # need a long sleep here to allow time for new production schedule to settle
+    echo "please wait 60 seconds while we wait for new producer schedule to settle"
     sleep 60
     kill -15 $NODEOS_ONE_PID
     # wait for shutdown
@@ -103,6 +104,7 @@ if [ "$COMMAND" == "CREATE" ] || [ "$COMMAND" == "START" ]; then
     --p2p-peer-address 127.0.0.1:3444 > $LOG_DIR/nodeos-one.log 2>&1 &
 
   # start nodeos two
+  echo "please wait while we fire up the second node"
   sleep 5
   if [ "$COMMAND" == "CREATE" ]; then
     nodeos --genesis-json ${ROOT_DIR}/genesis.json --agent-name "Finality Test Node Two" \
@@ -125,6 +127,7 @@ if [ "$COMMAND" == "CREATE" ] || [ "$COMMAND" == "START" ]; then
       --p2p-peer-address 127.0.0.1:1444 \
       --p2p-peer-address 127.0.0.1:3444 > $LOG_DIR/nodeos-two.log 2>&1 &
   fi
+  echo "please wait while we fire up the third node"
   sleep 10
 
   if [ "$COMMAND" == "CREATE" ]; then
