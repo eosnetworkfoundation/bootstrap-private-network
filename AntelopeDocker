@@ -50,3 +50,14 @@ RUN /local/eosnetworkfoundation/repos/bootstrap-private-network/bin/install_ante
 USER enfuser
 RUN /local/eosnetworkfoundation/repos/bootstrap-private-network/bin/build_eos_contracts.sh \
    469e1b3a822d6efbe5cb9422250f23eb6ce7ef7c
+# preserve packages
+RUN mkdir /local/eosnetworkfoundation/software
+RUN mkdir /local/eosnetworkfoundation/software/leap
+RUN mkdir /local/eosnetworkfoundation/software/cdt
+RUN mv /local/eosnetworkfoundation/leap_build/leap_*.deb /local/eosnetworkfoundation/software/leap
+RUM mv /local/eosnetworkfoundation/repos/cdt/build/tools/bin /local/eosnetworkfoundation/software/cdt
+# clean out space
+RUN rm -rf /local/eosnetworkfoundation/repos/leap/.git/modules
+RUN find /local/eosnetworkfoundation/repos/leap/ -name "build" -type d | xargs rm -rf
+RUN rm -rf /local/eosnetworkfoundation/repos/cdt/build
+RUN rm -rf rm -rf /local/eosnetworkfoundation/leap_build/

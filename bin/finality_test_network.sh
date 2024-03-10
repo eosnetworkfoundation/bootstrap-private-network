@@ -32,10 +32,57 @@ stop_func() {
 ### END STOP Command
 
 #####
+# Check Percent Used Space
+#####
+check_used_space() {
+  # check used space ; threshhold is 90%
+  threshold=90
+  percent_used=$(df -h "${ROOT_DIR:?}" | awk 'NR==2 {print $5}' | sed 's/%//')
+  if [ ${percent_used:-100} -gt ${threshold} ]; then
+    echo "ERROR: ${ROOT_DIR} is full at ${percent_used:-100}%. Must be less then ${threshold}%."
+    return 127
+  else
+    return 0
+  fi
+}
+
+#####
 # START/CREATE Function to startup all nodes
 ####
 start_func() {
   COMMAND=$1
+
+  check_used_space
+  USED_SPACE=$?
+
+  if [ $USED_SPACE -ne 0 ]; then
+    echo "Do you want to free up disk space on this docker container (Y/N)"
+    echo "Reponding Y or y will remove the git repos included on this container"
+    read -r answer
+
+    # Check the user's answer
+    if [[ "$answer" = "Y" ]] || [[ "$answer" = "y" ]]; then
+      # Remove the directory
+      echo "Removing the directory /local/eosnetworkfoundation/repos..."
+      rm -rf /local/eosnetworkfoundation/repos/cdt
+      rm -rf /local/eosnetworkfoundation/repos/leap
+      rm -rf /local/eosnetworkfoundation/repos/eos-system-contracts
+      rm -rf /local/eosnetworkfoundation/repos/reference-contracts
+      echo "Directory removed."
+
+      check_used_space
+      USED_SPACE=$?
+
+      if [ $USED_SPACE -ne 0 ]; then
+        echo "Require more free space. Exiting. Please free up space and try again."
+        exit 127
+      fi
+    else
+      echo "Operation cancelled. Exiting. Please free up space and try again."
+      exit 127
+    fi
+fi
+
   # get config information
   NODEOS_ONE_PORT=8888
   ENDPOINT="http://127.0.0.1:${NODEOS_ONE_PORT}"
