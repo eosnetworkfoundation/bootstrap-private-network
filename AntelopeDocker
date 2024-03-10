@@ -55,7 +55,7 @@ RUN mkdir /local/eosnetworkfoundation/software
 RUN mkdir /local/eosnetworkfoundation/software/leap
 RUN mkdir /local/eosnetworkfoundation/software/cdt
 RUN mv /local/eosnetworkfoundation/leap_build/leap_*.deb /local/eosnetworkfoundation/software/leap
-RUM mv /local/eosnetworkfoundation/repos/cdt/build/tools/bin /local/eosnetworkfoundation/software/cdt
+RUN mv /local/eosnetworkfoundation/repos/cdt/build/tools/bin /local/eosnetworkfoundation/software/cdt
 # clean out space
 RUN rm -rf /local/eosnetworkfoundation/repos/leap/.git/modules
 RUN find /local/eosnetworkfoundation/repos/leap/ -name "build" -type d | xargs rm -rf
