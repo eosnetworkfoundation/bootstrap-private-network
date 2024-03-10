@@ -56,32 +56,9 @@ start_func() {
   USED_SPACE=$?
 
   if [ $USED_SPACE -ne 0 ]; then
-    echo "Do you want to free up disk space on this docker container (Y/N)"
-    echo "Reponding Y or y will remove the git repos included on this container"
-    read -r answer
-
-    # Check the user's answer
-    if [[ "$answer" = "Y" ]] || [[ "$answer" = "y" ]]; then
-      # Remove the directory
-      echo "Removing the directory /local/eosnetworkfoundation/repos..."
-      rm -rf /local/eosnetworkfoundation/repos/cdt
-      rm -rf /local/eosnetworkfoundation/repos/leap
-      rm -rf /local/eosnetworkfoundation/repos/eos-system-contracts
-      rm -rf /local/eosnetworkfoundation/repos/reference-contracts
-      echo "Directory removed."
-
-      check_used_space
-      USED_SPACE=$?
-
-      if [ $USED_SPACE -ne 0 ]; then
-        echo "Require more free space. Exiting. Please free up space and try again."
-        exit 127
-      fi
-    else
-      echo "Operation cancelled. Exiting. Please free up space and try again."
-      exit 127
-    fi
-fi
+    echo "Exiting not enough free space"
+    exit 127
+  fi
 
   # get config information
   NODEOS_ONE_PORT=8888

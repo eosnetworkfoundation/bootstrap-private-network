@@ -1,4 +1,4 @@
-FROM ubuntu:22.04
+FROM ubuntu:22.04 as build-install-stage
 RUN apt-get -y update && apt-get install -y  \
         build-essential   \
         cmake             \
@@ -56,8 +56,13 @@ RUN mkdir /local/eosnetworkfoundation/software/leap
 RUN mkdir /local/eosnetworkfoundation/software/cdt
 RUN mv /local/eosnetworkfoundation/leap_build/leap_*.deb /local/eosnetworkfoundation/software/leap
 RUN mv /local/eosnetworkfoundation/repos/cdt/build/tools/bin /local/eosnetworkfoundation/software/cdt
-# clean out space
+
+FROM build-install-stage as clean-out-stage
 RUN rm -rf /local/eosnetworkfoundation/repos/leap/.git/modules
 RUN find /local/eosnetworkfoundation/repos/leap/ -name "build" -type d | xargs rm -rf
 RUN rm -rf /local/eosnetworkfoundation/repos/cdt/build
 RUN rm -rf rm -rf /local/eosnetworkfoundation/leap_build/
+RUN rm -rf /local/eosnetworkfoundation/repos/cdt
+RUN rm -rf /local/eosnetworkfoundation/repos/leap
+RUN rm -rf /local/eosnetworkfoundation/repos/eos-system-contracts
+RUN rm -rf /local/eosnetworkfoundation/repos/reference-contracts
