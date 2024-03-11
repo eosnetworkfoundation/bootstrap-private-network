@@ -47,6 +47,7 @@ RUN /local/eosnetworkfoundation/repos/bootstrap-private-network/bin/build_antelo
     b1eacc8b9f7cf3a4fc7c0218b0f1fb506727eca3
 USER root
 RUN /local/eosnetworkfoundation/repos/bootstrap-private-network/bin/install_antelope_software.sh
+EXPOSE 8888
 USER enfuser
 RUN /local/eosnetworkfoundation/repos/bootstrap-private-network/bin/build_eos_contracts.sh \
    469e1b3a822d6efbe5cb9422250f23eb6ce7ef7c
