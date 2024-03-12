@@ -14,7 +14,7 @@ https://github.com/eosnetworkfoundation/bootstrap-private-network/blob/main/Ante
 You will need to build the following Antelope software from source, using the specified git tags or commit hashes. The software should be built in the following order to satisfy dependancies `Leap`, followed by `CDT`, followed by `Reference Contracts`.
 
 These Git Commit Hashes or Tags are current to the following date.
-https://github.com/eosnetworkfoundation/bootstrap-private-network/blob/main/bin/docker-build-image.sh#L3
+https://github.com/eosnetworkfoundation/bootstrap-private-network/blob/main/bin/docker-build-image.sh#L17
 
 ### Leap
 Latest Git Commit or Tag
