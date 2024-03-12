@@ -40,6 +40,7 @@ The new algorithm is finalizing blocks faster. Even as producers scale up the SA
 
 ## Step By Step Documentation
 See [Step By Step](doc/step-by-step.md)
+
 Changes for larger [multi-host production systems](doc/large-scale-setup.md)
 
 ## Antelope Change Log
