@@ -77,10 +77,19 @@ One the node is running we need to run two scripts to add accounts, permissions,
 - $DIR/reference-contracts/build/contracts
 - PublicKey
 
+This script creates the needed accounts.
+https://github.com/eosnetworkfoundation/bootstrap-private-network/blob/d2db1d588bf824beb84967e300224fbf35f29987/bin/boot_actions.sh#L15-L24
+
+Below we activate the protocols needed to support Savanna and create the `token`, `boot`, and `bios` contracts.
+https://github.com/eosnetworkfoundation/bootstrap-private-network/blob/d2db1d588bf824beb84967e300224fbf35f29987/bin/boot_actions.sh#L26-L51
+
 [block_producer_schedule](/bin/block_producer_schedule.sh) is the reference script. You pass in the following values
 
 - 127.0.0.1:8888
 - PublicKey
+
+This script create new block producers and creates the production schedule.
+https://github.com/eosnetworkfoundation/bootstrap-private-network/blob/d2db1d588bf824beb84967e300224fbf35f29987/bin/block_producer_schedule.sh#L6-L52
 
 #### `Shutdown`
 Now that we have initialized our first instance we need to shut it down and restart. Find the pid and send `kill -15 $pid` to terminate the instance.
