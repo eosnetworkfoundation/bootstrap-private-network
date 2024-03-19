@@ -34,8 +34,6 @@ cleos --url $ENDPOINT set contract eosio "$CONTRACT_DIR"/eosio.boot/
 cleos --url $ENDPOINT push action eosio activate '["fce57d2331667353a0eac6b4209b67b843a7262a848af0a49a6e2fa9f6584eb4"]' -p eosio
 # DISABLE_DEFERRED_TRXS_STAGE_2
 cleos --url $ENDPOINT push action eosio activate '["09e86cb0accf8d81c9e85d34bea4b925ae936626d00c984e4691186891f5bc16"]' -p eosio
-# PREACTIVATE_FEATURE
-cleos --url $ENDPOINT push action eosio activate '["0ec7e080177b2c02b278d5088611686b49d739925a92d9bfcacd7fc6b74053bd"]' -p eosio
 # WTMSIG_BLOCK_SIGNATURES
 cleos --url $ENDPOINT push action eosio activate '["299dcb6af692324b899b39f16d5a530a33062804e41f09dc97e9f156b4476707"]' -p eosio
 # BLS_PRIMITIVES2
