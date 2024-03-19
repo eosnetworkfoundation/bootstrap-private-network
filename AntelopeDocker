@@ -43,8 +43,8 @@ RUN git clone https://github.com/eosnetworkfoundation/eos-system-contracts.git
 RUN git clone https://github.com/eosnetworkfoundation/bootstrap-private-network.git
 WORKDIR /local/eosnetworkfoundation/repos/bootstrap-private-network
 RUN /local/eosnetworkfoundation/repos/bootstrap-private-network/bin/build_antelope_software.sh \
-    49c96a20392993c291cfd03b731759c6c6ca2bef \
-    b1eacc8b9f7cf3a4fc7c0218b0f1fb506727eca3
+    03ac11e484f95f56409a725cabef583b9edccf86 \
+    dc1019e4105e169a3520726281c70f1e9db953ca
 USER root
 RUN /local/eosnetworkfoundation/repos/bootstrap-private-network/bin/install_antelope_software.sh
 EXPOSE 8888
