@@ -14,23 +14,23 @@ https://github.com/eosnetworkfoundation/bootstrap-private-network/blob/main/Ante
 You will need to build the following Antelope software from source, using the specified git tags or commit hashes. The software should be built in the following order to satisfy dependancies `Leap`, followed by `CDT`, followed by `Reference Contracts`.
 
 These Git Commit Hashes or Tags are current to the following date.
-https://github.com/eosnetworkfoundation/bootstrap-private-network/blob/c1fdba2dcf8ff69d983292960f8ee49711105195/bin/docker-build-image.sh#L17
+https://github.com/eosnetworkfoundation/bootstrap-private-network/blob/4ceac72ac3297652acfcdf6971755a8255390999/bin/docker-build-image.sh#L17
 
 ### Leap
 Latest Git Commit or Tag
-https://github.com/eosnetworkfoundation/bootstrap-private-network/blob/c1fdba2dcf8ff69d983292960f8ee49711105195/AntelopeDocker#L46
+https://github.com/eosnetworkfoundation/bootstrap-private-network/blob/4ceac72ac3297652acfcdf6971755a8255390999/AntelopeDocker#L46
 
 [Full Instructions for Building Leap](https://github.com/antelopeio/leap?tab=readme-ov-file#build-and-install-from-source) or you can review the [Reference Script to Build Leap and CDT](/bin/build_antelope_software.sh).
 
 ### CDT
 Latest Git Commit or Tag
-https://github.com/eosnetworkfoundation/bootstrap-private-network/blob/c1fdba2dcf8ff69d983292960f8ee49711105195/AntelopeDocker#L47
+https://github.com/eosnetworkfoundation/bootstrap-private-network/blob/4ceac72ac3297652acfcdf6971755a8255390999/AntelopeDocker#L47
 
 [Full Instructions for Building CDT](https://github.com/antelopeio/cdt?tab=readme-ov-file#building-from-source) or you can review the [Reference Script to Build Leap and CDT](/bin/build_antelope_software.sh).
 
 ### Reference Contract
 Latest Git Commit or Tag
-https://github.com/eosnetworkfoundation/bootstrap-private-network/blob/c1fdba2dcf8ff69d983292960f8ee49711105195/AntelopeDocker#L53
+https://github.com/eosnetworkfoundation/bootstrap-private-network/blob/4ceac72ac3297652acfcdf6971755a8255390999/AntelopeDocker#L53
 
 [Full Instructions for Building Refereence Contracts](https://github.com/antelopeio/reference-contracts?tab=readme-ov-file#building) or you can review [Reference Script to Build Contracts](/bin/build_eos_contracts.sh).
 
@@ -50,14 +50,14 @@ Take the reference [Genesis File](/config/genesis.json) and replace the value fo
 We will create a shared config file for the common configuration values. Configuration here is only for preview development purposes and should not be used as a reference production config. Copy [config.ini](/config/config.ini) to your filesystem. Additional configuration values will be added on the command line.
 #### `Create Log and Data Dir`
 You will need to create three data directories, one for each instance of nodeos you will run. You will need a place for log files as well. For example:
-https://github.com/eosnetworkfoundation/bootstrap-private-network/blob/c1fdba2dcf8ff69d983292960f8ee49711105195/bin/finality_test_network.sh#L79-L82
+https://github.com/eosnetworkfoundation/bootstrap-private-network/blob/4ceac72ac3297652acfcdf6971755a8255390999/bin/finality_test_network.sh#L79-L82
 #### `Create Wallet`
 You need to create and import the root private key into a wallet. This will allow you to run initialization commands on the blockchain. In the example below we have a named wallet and we save the wallet password to a file.
-https://github.com/eosnetworkfoundation/bootstrap-private-network/blob/c1fdba2dcf8ff69d983292960f8ee49711105195/bin/open_wallet.sh#L14
+https://github.com/eosnetworkfoundation/bootstrap-private-network/blob/4ceac72ac3297652acfcdf6971755a8255390999/bin/open_wallet.sh#L14
 Then import your `PrivateKey` adding it to the wallet
-https://github.com/eosnetworkfoundation/bootstrap-private-network/blob/c1fdba2dcf8ff69d983292960f8ee49711105195/bin/finality_test_network.sh#L89-L90
+https://github.com/eosnetworkfoundation/bootstrap-private-network/blob/4ceac72ac3297652acfcdf6971755a8255390999/bin/finality_test_network.sh#L89-L90
 If you have already created a wallet you may need to unlock your wallet using your password
-https://github.com/eosnetworkfoundation/bootstrap-private-network/blob/c1fdba2dcf8ff69d983292960f8ee49711105195/bin/open_wallet.sh#L19
+https://github.com/eosnetworkfoundation/bootstrap-private-network/blob/4ceac72ac3297652acfcdf6971755a8255390999/bin/open_wallet.sh#L19
 #### `Initialization Data`
 Taking everything we have prepared we will now start a `nodoes` instance. We will be issuing commands while nodes is running so run this command in the background, or be prepared to open multiple terminals on your host. You'll notice we specified the
 - genesis file
@@ -65,7 +65,7 @@ Taking everything we have prepared we will now start a `nodoes` instance. We wil
 - data directory for first instance
 - public and private key from our very first step
 It is very important to include the option `--enable-stale-production`, we will need that to bootstrap our network.
-https://github.com/eosnetworkfoundation/bootstrap-private-network/blob/c1fdba2dcf8ff69d983292960f8ee49711105195/bin/finality_test_network.sh#L94-L101
+https://github.com/eosnetworkfoundation/bootstrap-private-network/blob/4ceac72ac3297652acfcdf6971755a8255390999/bin/finality_test_network.sh#L94-L101
 
 One the node is running we need to run two scripts to add accounts, permissions, and contracts.
 - boot actions
@@ -78,10 +78,10 @@ One the node is running we need to run two scripts to add accounts, permissions,
 - PublicKey
 
 This script creates the needed accounts.
-https://github.com/eosnetworkfoundation/bootstrap-private-network/blob/d2db1d588bf824beb84967e300224fbf35f29987/bin/boot_actions.sh#L15-L24
+https://github.com/eosnetworkfoundation/bootstrap-private-network/blob/4ceac72ac3297652acfcdf6971755a8255390999/bin/boot_actions.sh#L15-L24
 
 Below we activate the protocols needed to support Savanna and create the `token`, `boot`, and `bios` contracts.
-https://github.com/eosnetworkfoundation/bootstrap-private-network/blob/d2db1d588bf824beb84967e300224fbf35f29987/bin/boot_actions.sh#L26-L51
+https://github.com/eosnetworkfoundation/bootstrap-private-network/blob/4ceac72ac3297652acfcdf6971755a8255390999/bin/boot_actions.sh#L33-L79
 
 [block_producer_schedule](/bin/block_producer_schedule.sh) is the reference script. You pass in the following values
 
@@ -89,7 +89,7 @@ https://github.com/eosnetworkfoundation/bootstrap-private-network/blob/d2db1d588
 - PublicKey
 
 This script create new block producers and creates the production schedule.
-https://github.com/eosnetworkfoundation/bootstrap-private-network/blob/d2db1d588bf824beb84967e300224fbf35f29987/bin/block_producer_schedule.sh#L6-L52
+https://github.com/eosnetworkfoundation/bootstrap-private-network/blob/4ceac72ac3297652acfcdf6971755a8255390999/bin/block_producer_schedule.sh#L6-L52
 
 #### `Shutdown`
 Now that we have initialized our first instance we need to shut it down and restart. Find the pid and send `kill -15 $pid` to terminate the instance.
@@ -100,11 +100,11 @@ Now we start our three nodes peer'd to each other. The Second and Third nodes wi
 In the examples below the `PublicKey` and `PrivateKey` have the same values.
 
 #### `Node One`
-https://github.com/eosnetworkfoundation/bootstrap-private-network/blob/c1fdba2dcf8ff69d983292960f8ee49711105195/bin/finality_test_network.sh#L119-L128
+https://github.com/eosnetworkfoundation/bootstrap-private-network/blob/4ceac72ac3297652acfcdf6971755a8255390999/bin/finality_test_network.sh#L119-L128
 #### `Node Two`
-https://github.com/eosnetworkfoundation/bootstrap-private-network/blob/c1fdba2dcf8ff69d983292960f8ee49711105195/bin/finality_test_network.sh#L134-L142
+https://github.com/eosnetworkfoundation/bootstrap-private-network/blob/4ceac72ac3297652acfcdf6971755a8255390999/bin/finality_test_network.sh#L134-L142
 #### `Node Three`
-https://github.com/eosnetworkfoundation/bootstrap-private-network/blob/c1fdba2dcf8ff69d983292960f8ee49711105195/bin/finality_test_network.sh#L158-L166
+https://github.com/eosnetworkfoundation/bootstrap-private-network/blob/4ceac72ac3297652acfcdf6971755a8255390999/bin/finality_test_network.sh#L158-L166
 
 ## Check Blocks Behind
 Here you can check the Head Block Number and Last Irreversible Block and see there are far apart. `cleos get info`
