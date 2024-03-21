@@ -32,15 +32,15 @@ https://github.com/eosnetworkfoundation/bootstrap-private-network/blob/fc95bfc37
 Latest Git Commit or Tag
 https://github.com/eosnetworkfoundation/bootstrap-private-network/blob/fc95bfc37599b8b848d1d06ed47d5d6892b00868/AntelopeDocker#L53
 
-[Full Instructions for Building Refereence Contracts](https://github.com/antelopeio/reference-contracts?tab=readme-ov-file#building) or you can review [Reference Script to Build Contracts](/bin/build_eos_contracts.sh).
+[Full Instructions for Building Reference Contracts](https://github.com/antelopeio/reference-contracts?tab=readme-ov-file#building) or you can review [Reference Script to Build Contracts](/bin/build_eos_contracts.sh).
 
 ## Install Antelope Software
-Now that the binaries are build you need to add them to your path or install them into well know locations. The [Reference Install Script](/bin/install_antelope_software.sh) must be run as root and has one way to install the software.
+Now that the binaries are build you need to add CDT and Leap to your path or install them into well know locations. The [Reference Install Script](/bin/install_antelope_software.sh) must be run as root and demonstrates one way to install the software.
 
-Note, the `Reference Contracts` as install later during the initialization of the EOS blockchain.
+Note, the `Reference Contracts` are install later during the initialization of the EOS blockchain.
 
 ## Initialize Block Chain
-Before we can start up our multi-producer blockchain a few preperations are needed.
+Before we can start up our multi-producer blockchain a few preparations are needed.
 #### `Create New Key Pair`
 We will create a new key pair for the root user of the blockchain. You will use the Public Key often in the setup, so please save these keys for use later. You will see a `PublicKey` and `PrivateKey` printed to the console using the following command.
 `cleos create key --to-console`
@@ -136,7 +136,7 @@ https://github.com/eosnetworkfoundation/bootstrap-private-network/blob/c1fdba2dc
 https://github.com/eosnetworkfoundation/bootstrap-private-network/blob/c1fdba2dcf8ff69d983292960f8ee49711105195/bin/finality_test_network.sh#L168-L176
 
 #### `Apply Finalizer Key`
-`cleos push action eosio setfinalizer` with `setfinalizer_policy` json. In the developer example below we have three producers. The threshold value should be 2/3 of the weights across all the finalizers listed. Once this command is run, the new Savanna algorithm is activated.
+`cleos push action eosio setfinalizer` with `setfinalizer_policy` json. In the developer example below we have three producers. The threshold value should be 2/3 or greater of the weights across all the finalizers listed. Once this command is run, the new Savanna algorithm is activated.
 
 https://github.com/eosnetworkfoundation/bootstrap-private-network/blob/c1fdba2dcf8ff69d983292960f8ee49711105195/bin/activate_savanna.sh#L20-L44
 
