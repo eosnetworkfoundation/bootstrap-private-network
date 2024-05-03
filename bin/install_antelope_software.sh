@@ -18,7 +18,7 @@ if [ "$TUID" -eq 0 ]; then
   CDT_BUILD_DIR="${ROOT_DIR}"/repos/cdt/build
 
   cd "${SPRING_BUILD_DIR:?}" || exit
-  dpkg -i ./spring_[5-6].[0-9].[0-9]*-ubuntu22.04_amd64.deb
+  dpkg -i ./spring_[1-9].[0-9].[0-9]*-ubuntu22.04_amd64.deb
   cd "${CDT_BUILD_DIR:?}" || exit
   make install
 
