@@ -214,10 +214,10 @@ if [ "$COMMAND" == "SAVANNA" ]; then
   echo "creating new finalizer BLS keys"
   PUBLIC_KEY=()
   PROOF_POSSESION=()
-  # three producers
-  for producer_name in bpa bpb bpc
+  # producers
+  for producer_name in bpa bpb bpc bpd bpe bpf bpg bph bpi bpj bpk bpl bpm bpn bpo bpp bpq bpr bps bpt bpu
   do
-    leap-util bls create key --to-console > "${WALLET_DIR:?}"/"${producer_name}.finalizer.key"
+    spring-util bls create key --to-console > "${WALLET_DIR:?}"/"${producer_name}.finalizer.key"
     PUBLIC_KEY+=( $(grep Public "${WALLET_DIR}"/"${producer_name}.finalizer.key" | cut -d: -f2 | sed 's/ //g') ) \
       || exit 127
     PRIVATE_KEY+=( $(grep Private "${WALLET_DIR}"/"${producer_name}.finalizer.key" | cut -d: -f2 | sed 's/ //g') ) \
@@ -225,7 +225,7 @@ if [ "$COMMAND" == "SAVANNA" ]; then
     PROOF_POSSESION+=( $(grep Possession "${WALLET_DIR}"/"${producer_name}.finalizer.key" | cut -d: -f2 | sed 's/ //g') ) \
       || exit 127
     echo "# producer ${producer_name} finalizer key" >> "$ROOT_DIR"/config.ini
-    echo "signature-provider = ""${PUBLIC_KEY[@]: -1}""=KEY:""${PRIVATE_KEY[@]: -1}" >> "$ROOT_DIR"/config.ini
+    echo "signature-provider = ""${PUBLIC_KEY[@]: -1}""=KEY:""${PRIVATE_KEY[@]: -1}" >> "${ROOT_DIR}/config.ini"
   done
 
   echo "need to reload config: please wait shutting down node"

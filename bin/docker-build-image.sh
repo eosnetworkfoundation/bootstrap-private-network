@@ -15,4 +15,4 @@ if [ $used_size -gt $max_space_used ]; then
 fi
 
 # March 18th 2024 Build
-docker build -f AntelopeDocker --tag savanna-antelope:5.1.0-dev-240318 --ulimit nofile=1024:1024 --target ${TARGET} .
+docker build -f AntelopeDocker --tag savanna-antelope:1.0.0-beta --ulimit nofile=1024:1024 --target ${TARGET} .

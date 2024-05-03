@@ -36,33 +36,28 @@ USER enfuser
 WORKDIR /local/eosnetworkfoundation
 RUN mkdir /local/eosnetworkfoundation/repos
 WORKDIR /local/eosnetworkfoundation/repos
-RUN git clone --recursive https://github.com/AntelopeIO/leap.git
-RUN git clone --recursive https://github.com/AntelopeIO/cdt.git
+RUN git clone -b main --single-branch https://github.com/AntelopeIO/spring.git
+RUN git clone -b release/4.1 --single-branch https://github.com/AntelopeIO/cdt.git
 RUN git clone https://github.com/AntelopeIO/reference-contracts.git
-RUN git clone https://github.com/eosnetworkfoundation/eos-system-contracts.git
-RUN git clone https://github.com/eosnetworkfoundation/bootstrap-private-network.git
+RUN git clone -b april_leap --single-branch https://github.com/eosnetworkfoundation/bootstrap-private-network.git
 WORKDIR /local/eosnetworkfoundation/repos/bootstrap-private-network
-RUN /local/eosnetworkfoundation/repos/bootstrap-private-network/bin/build_antelope_software.sh \
-    03ac11e484f95f56409a725cabef583b9edccf86 \
-    dc1019e4105e169a3520726281c70f1e9db953ca
+RUN /local/eosnetworkfoundation/repos/bootstrap-private-network/bin/build_antelope_software.sh
 USER root
 RUN /local/eosnetworkfoundation/repos/bootstrap-private-network/bin/install_antelope_software.sh
 EXPOSE 8888
 USER enfuser
-RUN /local/eosnetworkfoundation/repos/bootstrap-private-network/bin/build_eos_contracts.sh \
-   469e1b3a822d6efbe5cb9422250f23eb6ce7ef7c
+RUN /local/eosnetworkfoundation/repos/bootstrap-private-network/bin/build_eos_contracts.sh
 # preserve packages
 RUN mkdir /local/eosnetworkfoundation/software
-RUN mkdir /local/eosnetworkfoundation/software/leap
+RUN mkdir /local/eosnetworkfoundation/software/spring
 RUN mkdir /local/eosnetworkfoundation/software/cdt
-RUN mv /local/eosnetworkfoundation/leap_build/leap_*.deb /local/eosnetworkfoundation/software/leap
+RUN mv /local/eosnetworkfoundation/spring_build/spring_*.deb /local/eosnetworkfoundation/software/spring
 RUN mv /local/eosnetworkfoundation/repos/cdt/build/tools/bin /local/eosnetworkfoundation/software/cdt
 
 FROM build-install-stage as clean-out-stage
-RUN rm -rf /local/eosnetworkfoundation/repos/leap/.git/modules
-RUN find /local/eosnetworkfoundation/repos/leap/ -name "build" -type d | xargs rm -rf
+RUN rm -rf /local/eosnetworkfoundation/repos/spring/.git/modules
+RUN find /local/eosnetworkfoundation/repos/spring/ -name "build" -type d | xargs rm -rf
 RUN rm -rf /local/eosnetworkfoundation/repos/cdt/build
-RUN rm -rf rm -rf /local/eosnetworkfoundation/leap_build/
+RUN rm -rf rm -rf /local/eosnetworkfoundation/spring_build/
 RUN rm -rf /local/eosnetworkfoundation/repos/cdt
-RUN rm -rf /local/eosnetworkfoundation/repos/leap
-RUN rm -rf /local/eosnetworkfoundation/repos/eos-system-contracts
+RUN rm -rf /local/eosnetworkfoundation/repos/spring

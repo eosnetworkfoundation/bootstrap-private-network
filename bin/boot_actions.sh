@@ -4,7 +4,7 @@
 # Once first nodeos is setup, running and producing blocks
 # called from finality_Test_network.sh
 # execute these commands to activate features
-# create accounts, contracts, bios, boot, and token
+# create accounts, contracts: boot, system, and token
 # fund with tokens
 ####
 
@@ -26,6 +26,8 @@ cleos --url $ENDPOINT create account eosio eosio.rex $PUBLIC_KEY
 cleos --url $ENDPOINT set contract eosio.token "$CONTRACT_DIR"/eosio.token/
 cleos --url $ENDPOINT push action eosio.token create '[ "eosio", "10000000000.0000 EOS" ]' -p eosio.token@active
 cleos --url $ENDPOINT push action eosio.token issue '[ "eosio", "1000000000.0000 EOS", "initial issuance" ]' -p eosio
+cleos --url $ENDPOINT set contract eosio "$CONTRACT_DIR"/eosio.msig
+cleos --url $ENDPOINT set contract eosio "$CONTRACT_DIR"/eosio.wrap
 
 curl --request POST --url "$ENDPOINT"/v1/producer/schedule_protocol_feature_activations -d '{"protocol_features_to_activate": ["0ec7e080177b2c02b278d5088611686b49d739925a92d9bfcacd7fc6b74053bd"]}'
 sleep 1
@@ -77,4 +79,9 @@ cleos --url $ENDPOINT push action eosio activate '["e0fb64b1085cc5538970158d05a0
 cleos --url $ENDPOINT push action eosio activate '["f0af56d2c5a48d60a4a5b5c903edfb7db3a736a94ed589d0b797df33ff9d3e1d"]' -p eosio
 sleep 1
 
-cleos --url $ENDPOINT set contract eosio "$CONTRACT_DIR"/eosio.bios
+cleos --url $ENDPOINT set contract eosio "$CONTRACT_DIR"/eosio.system
+cleos --url $ENDPOINT push action eosio init '["0", "4,EOS"]' -p eosio@active
+cleos --url $ENDPOINT push action eosio setpriv '["eosio.msig", 1]' -p eosio@active
+sleep 1
+# little test that everything has been setup correctly
+cleos --url $ENDPOINT system buyram eosio eosio "1000 EOS"
