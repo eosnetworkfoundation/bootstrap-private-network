@@ -26,5 +26,5 @@ git checkout $CONTRACTS_GIT_COMMIT_TAG
 git pull origin $CONTRACTS_GIT_COMMIT_TAG
 mkdir build
 cd build || exit
-cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTS=ON -Dleap_DIR="${SPRING_BUILD_DIR}/lib/cmake/spring" .. >> "${LOG_DIR}"/reference_contracts_build.log 2>&1
+cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTS=ON -Dspring_DIR="${SPRING_BUILD_DIR}/lib/cmake/spring" .. >> "${LOG_DIR}"/reference_contracts_build.log 2>&1
 make -j ${NPROC} >> "${LOG_DIR}"/reference_contracts_build.log 2>&1
