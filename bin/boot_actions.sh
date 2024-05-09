@@ -24,8 +24,8 @@ cleos --url $ENDPOINT create account eosio eosio.vpay $PUBLIC_KEY
 cleos --url $ENDPOINT create account eosio eosio.rex $PUBLIC_KEY
 
 cleos --url $ENDPOINT set contract eosio.token "$CONTRACT_DIR"/eosio.token/
-cleos --url $ENDPOINT push action eosio.token create '[ "eosio", "10000000000.0000 EOS" ]' -p eosio.token@active
-cleos --url $ENDPOINT push action eosio.token issue '[ "eosio", "1000000000.0000 EOS", "initial issuance" ]' -p eosio
+cleos --url $ENDPOINT push action eosio.token create '[ "eosio", "380000000.0000 EOS" ]' -p eosio.token@active
+cleos --url $ENDPOINT push action eosio.token issue '[ "eosio", "380000000.0000 EOS", "initial issuance" ]' -p eosio
 cleos --url $ENDPOINT set contract eosio "$CONTRACT_DIR"/eosio.msig
 cleos --url $ENDPOINT set contract eosio "$CONTRACT_DIR"/eosio.wrap
 

@@ -18,7 +18,14 @@ if [ "$TUID" -eq 0 ]; then
   CDT_BUILD_DIR="${ROOT_DIR}"/repos/cdt/build
 
   cd "${SPRING_BUILD_DIR:?}" || exit
-  dpkg -i ./spring_[1-9].[0-9].[0-9]*-ubuntu22.04_amd64.deb
+  PRIME_LOC='./spring_[1-9].[0-9].[0-9]*-ubuntu22.04_amd64.deb'
+  SECOND_LOC='./_CPack_Packages/Linux/DEB/spring_[1-9].[0-9].[0-9]*-ubuntu22.04_amd64.deb'
+  if [ -e $PRIME_LOC ]; then
+    dpkg -i $PRIME_LOC
+  else
+    dpkg -i $SECOND_LOC
+  fi
+
   cd "${CDT_BUILD_DIR:?}" || exit
   make install
 

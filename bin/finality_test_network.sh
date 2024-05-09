@@ -7,7 +7,14 @@
 # CLEAN out data from previous network
 # STOP all nodes on network
 # START 3 node network
+# BACKUP take snapshots on each running nodeos
 ####
+
+# config information
+NODEOS_ONE_PORT=8888
+NODEOS_TWO_PORT=6888
+NODEOS_THREE_PORT=7888
+ENDPOINT="http://127.0.0.1:${NODEOS_ONE_PORT}"
 
 COMMAND=${1:-"NA"}
 ROOT_DIR="/bigata1/savanna"
@@ -27,7 +34,7 @@ stop_func() {
     echo $p && kill -15 $p
   done
   echo "waiting for production network to quiesce..."
-  sleep 60
+  sleep 5
 }
 ### END STOP Command
 
@@ -60,16 +67,17 @@ start_func() {
     exit 127
   fi
 
-  # get config information
-  NODEOS_ONE_PORT=8888
-  ENDPOINT="http://127.0.0.1:${NODEOS_ONE_PORT}"
-
   # create private key
   [ ! -d "$WALLET_DIR" ] && mkdir -p "$WALLET_DIR"
-  [ ! -f "$WALLET_DIR"/finality-test-network.keys ] && cleos create key --to-console > "$WALLET_DIR"/finality-test-network.keys
+  [ ! -s "$WALLET_DIR"/finality-test-network.keys ] && cleos create key --to-console > "$WALLET_DIR"/finality-test-network.keys
   # head because we want the first match; they may be multiple keys
   EOS_ROOT_PRIVATE_KEY=$(grep Private "${WALLET_DIR}"/finality-test-network.keys | head -1 | cut -d: -f2 | sed 's/ //g')
   EOS_ROOT_PUBLIC_KEY=$(grep Public "${WALLET_DIR}"/finality-test-network.keys | head -1 | cut -d: -f2 | sed 's/ //g')
+  # create keys for first three producers
+  for producer_name in bpa bpb bpc
+  do
+      [ ! -s "$WALLET_DIR/${producer_name}.keys" ] && cleos create key --to-console > "$WALLET_DIR/${producer_name}.keys"
+  done
 
   # create initialize genesis file; create directories; copy cofigs into place
   if [ "$COMMAND" == "CREATE" ]; then
@@ -104,24 +112,31 @@ start_func() {
     # create accounts, activate protocols, create tokens, set system contracts
     sleep 1
     "$SCRIPT_DIR"/boot_actions.sh "$ENDPOINT" "$CONTRACT_DIR" "$EOS_ROOT_PUBLIC_KEY"
-    "$SCRIPT_DIR"/block_producer_schedule.sh "$ENDPOINT" "$EOS_ROOT_PUBLIC_KEY"
+    sleep 1
+    # create producer and user accounts, stake EOS
+    "$SCRIPT_DIR"/create_accounts.sh "$ENDPOINT" "$CONTRACT_DIR"
+    sleep 1
+    # register producers and users vote for producers
+    "$SCRIPT_DIR"/block_producer_setup.sh "$ENDPOINT" "$WALLET_DIR"
     # need a long sleep here to allow time for new production schedule to settle
-    echo "please wait 60 seconds while we wait for new producer schedule to settle"
-    sleep 60
+    echo "please wait 5 seconds while we wait for new producer schedule to settle"
+    sleep 5
     kill -15 $NODEOS_ONE_PID
     # wait for shutdown
-    sleep 15
+    sleep 5
   fi
 
   # if CREATE we bootstraped the node and killed it
   # if START we have no node running
   # either way we need to start Node One
+  BPA_PRIVATE_KEY=$(grep Private "$WALLET_DIR/bpa.keys" | head -1 | cut -d: -f2 | sed 's/ //g')
+  BPA_PUBLIC_KEY=$(grep Public "$WALLET_DIR/bpa.keys" | head -1 | cut -d: -f2 | sed 's/ //g')
   nodeos --agent-name "Finality Test Node One" \
     --http-server-address 0.0.0.0:${NODEOS_ONE_PORT} \
     --p2p-listen-endpoint 0.0.0.0:1444 \
     --enable-stale-production \
     --producer-name bpa \
-    --signature-provider ${EOS_ROOT_PUBLIC_KEY}=KEY:${EOS_ROOT_PRIVATE_KEY} \
+    --signature-provider ${BPA_PUBLIC_KEY}=KEY:${BPA_PRIVATE_KEY} \
     --config "$ROOT_DIR"/config.ini \
     --data-dir "$ROOT_DIR"/nodeos-one/data \
     --p2p-peer-address 127.0.0.1:2444 \
@@ -129,47 +144,56 @@ start_func() {
 
   # start nodeos two
   echo "please wait while we fire up the second node"
-  sleep 5
+  sleep 2
+
+  BPB_PRIVATE_KEY=$(grep Private "$WALLET_DIR/bpb.keys" | head -1 | cut -d: -f2 | sed 's/ //g')
+  BPB_PUBLIC_KEY=$(grep Public "$WALLET_DIR/bpb.keys" | head -1 | cut -d: -f2 | sed 's/ //g')
   if [ "$COMMAND" == "CREATE" ]; then
     nodeos --genesis-json ${ROOT_DIR}/genesis.json --agent-name "Finality Test Node Two" \
-      --http-server-address 0.0.0.0:6888 \
+      --http-server-address 0.0.0.0:${NODEOS_TWO_PORT} \
       --p2p-listen-endpoint 0.0.0.0:2444 \
+      --enable-stale-production \
       --producer-name bpb \
-      --signature-provider ${EOS_ROOT_PUBLIC_KEY}=KEY:${EOS_ROOT_PRIVATE_KEY} \
+      --signature-provider ${BPB_PUBLIC_KEY}=KEY:${BPB_PRIVATE_KEY} \
       --config "$ROOT_DIR"/config.ini \
       --data-dir "$ROOT_DIR"/nodeos-two/data \
       --p2p-peer-address 127.0.0.1:1444 \
       --p2p-peer-address 127.0.0.1:3444 > $LOG_DIR/nodeos-two.log 2>&1 &
   else
     nodeos --agent-name "Finality Test Node Two" \
-      --http-server-address 0.0.0.0:6888 \
+      --http-server-address 0.0.0.0:${NODEOS_TWO_PORT} \
       --p2p-listen-endpoint 0.0.0.0:2444 \
+      --enable-stale-production \
       --producer-name bpb \
-      --signature-provider ${EOS_ROOT_PUBLIC_KEY}=KEY:${EOS_ROOT_PRIVATE_KEY} \
+      --signature-provider ${BPB_PUBLIC_KEY}=KEY:${BPB_PRIVATE_KEY} \
       --config "$ROOT_DIR"/config.ini \
       --data-dir "$ROOT_DIR"/nodeos-two/data \
       --p2p-peer-address 127.0.0.1:1444 \
       --p2p-peer-address 127.0.0.1:3444 > $LOG_DIR/nodeos-two.log 2>&1 &
   fi
   echo "please wait while we fire up the third node"
-  sleep 10
+  sleep 5
 
+  BPC_PRIVATE_KEY=$(grep Private "$WALLET_DIR/bpc.keys" | head -1 | cut -d: -f2 | sed 's/ //g')
+  BPC_PUBLIC_KEY=$(grep Public "$WALLET_DIR/bpc.keys" | head -1 | cut -d: -f2 | sed 's/ //g')
   if [ "$COMMAND" == "CREATE" ]; then
     nodeos --genesis-json ${ROOT_DIR}/genesis.json --agent-name "Finality Test Node Three" \
-      --http-server-address 0.0.0.0:7888 \
+      --http-server-address 0.0.0.0:${NODEOS_THREE_PORT} \
       --p2p-listen-endpoint 0.0.0.0:3444 \
+      --enable-stale-production \
       --producer-name bpc \
-      --signature-provider ${EOS_ROOT_PUBLIC_KEY}=KEY:${EOS_ROOT_PRIVATE_KEY} \
+      --signature-provider ${BPC_PUBLIC_KEY}=KEY:${BPC_PRIVATE_KEY} \
       --config "$ROOT_DIR"/config.ini \
       --data-dir "$ROOT_DIR"/nodeos-three/data \
       --p2p-peer-address 127.0.0.1:1444 \
       --p2p-peer-address 127.0.0.1:2444 > $LOG_DIR/nodeos-three.log 2>&1 &
   else
     nodeos --agent-name "Finality Test Node Three" \
-      --http-server-address 0.0.0.0:7888 \
+      --http-server-address 0.0.0.0:${NODEOS_THREE_PORT} \
       --p2p-listen-endpoint 0.0.0.0:3444 \
+      --enable-stale-production \
       --producer-name bpc \
-      --signature-provider ${EOS_ROOT_PUBLIC_KEY}=KEY:${EOS_ROOT_PRIVATE_KEY} \
+      --signature-provider ${BPC_PUBLIC_KEY}=KEY:${BPC_PRIVATE_KEY} \
       --config "$ROOT_DIR"/config.ini \
       --data-dir "$ROOT_DIR"/nodeos-three/data \
       --p2p-peer-address 127.0.0.1:1444 \
@@ -177,7 +201,7 @@ start_func() {
   fi
 
   echo "waiting for production network to sync up..."
-  sleep 60
+  sleep 20
 }
 ## end START/CREATE COMMAND
 
@@ -215,7 +239,7 @@ if [ "$COMMAND" == "SAVANNA" ]; then
   PUBLIC_KEY=()
   PROOF_POSSESION=()
   # producers
-  for producer_name in bpa bpb bpc bpd bpe bpf bpg bph bpi bpj bpk bpl bpm bpn bpo bpp bpq bpr bps bpt bpu
+  for producer_name in bpa bpb bpc
   do
     spring-util bls create key --to-console > "${WALLET_DIR:?}"/"${producer_name}.finalizer.key"
     PUBLIC_KEY+=( $(grep Public "${WALLET_DIR}"/"${producer_name}.finalizer.key" | cut -d: -f2 | sed 's/ //g') ) \
@@ -230,7 +254,7 @@ if [ "$COMMAND" == "SAVANNA" ]; then
 
   echo "need to reload config: please wait shutting down node"
   stop_func
-  echo "need to reload config: please wait startu up nodes"
+  echo "need to reload config: please wait while we startup up nodes"
   start_func "START"
 
   echo "running final command to activate finality"
@@ -238,6 +262,17 @@ if [ "$COMMAND" == "SAVANNA" ]; then
   "$SCRIPT_DIR"/open_wallet.sh "$WALLET_DIR"
   # array will expand to multiple arguments on receiving side
   "$SCRIPT_DIR"/activate_savanna.sh "$ENDPOINT" "${PUBLIC_KEY[@]}" "${PROOF_POSSESION[@]}"
+  echo "please wait for transition to Savanna consensus"
+  sleep 30
+  grep 'Transitioning to savanna' "$LOG_DIR"/nodeos-one.log
+  grep 'Transition to instant finality' "$LOG_DIR"/nodeos-one.log
+fi
+
+if [ "$COMMAND" == "BACKUP" ]; then
+  for loc in "http://127.0.0.1:${NODEOS_ONE_PORT}" "http://127.0.0.1:${NODEOS_TWO_PORT}" "http://127.0.0.1:${NODEOS_THREE_PORT}"
+  do
+    $SCRIPT_DIR/do_snapshot.sh $loc
+  done
 fi
 
 echo "COMPLETED COMMAND ${COMMAND}"
