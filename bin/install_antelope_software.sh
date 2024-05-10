@@ -14,10 +14,10 @@ if [ "$TUID" -eq 0 ]; then
   echo "running as root"
 
   ROOT_DIR=/local/eosnetworkfoundation
-  SPRING_SOFTWARE_DIR="${ROOT_DIR}"/software/spring
+  SPRING_BUILD_DIR="${ROOT_DIR}"/spring_build
   CDT_BUILD_DIR="${ROOT_DIR}"/repos/cdt/build
 
-  cd "${SPRING_SOFTWARE_DIR:?}" || exit
+  cd "${SPRING_BUILD_DIR:?}" || exit
   PRIME_LOC='./spring_[1-9].[0-9].[0-9]*-ubuntu22.04_amd64.deb'
   if [ -e $PRIME_LOC ]; then
     dpkg -i $PRIME_LOC
