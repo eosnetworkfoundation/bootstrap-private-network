@@ -22,19 +22,9 @@ done
 USER_PRIVATE_KEY=$(grep Private "$WALLET_DIR/user.keys" | head -1 | cut -d: -f2 | sed 's/ //g')
 cleos wallet import --name finality-test-network-wallet --private-key $USER_PRIVATE_KEY
 
-for user_name in usera userb userc userd usere userf userg userh useri userj
-do
-  # vote
-  cleos --url $ENDPOINT_ONE system voteproducer prods ${user_name} bpa bpb bpc
-done
-
-for user_name in userk userl userm usern usero userp userq userr users usert useru
-do
-  # vote
-  cleos --url $ENDPOINT_ONE system voteproducer prods ${user_name} bpa bpb bpc
-done
-
-for user_name in userv userw userx usery userz
+for user_name in usera userb userc userd usere userf userg userh useri userj \
+   userk userl userm usern usero userp userq userr users usert useru \
+   userv userw userx usery userz
 do
   # vote
   cleos --url $ENDPOINT_ONE system voteproducer prods ${user_name} bpa bpb bpc

@@ -4,7 +4,7 @@ ENDPOINT_ONE=$1
 WALLET_DIR=$2
 
 # create 21 producers error out if vars not set
-for producer_name in bpa bpb bpc bpd bpe bpf bpg bph bpi bpj bpk bpl bpm bpn bpo bpp bpq bpr bps bpt bpu
+for producer_name in bpa bpb bpc
 do
     [ ! -s "$WALLET_DIR/${producer_name}.keys" ] && cleos create key --to-console > "$WALLET_DIR/${producer_name}.keys"
     # head because we want the first match; they may be multiple keys
@@ -27,7 +27,9 @@ USER_PRIVATE_KEY=$(grep Private "$WALLET_DIR/user.keys" | head -1 | cut -d: -f2 
 USER_PUBLIC_KEY=$(grep Public "$WALLET_DIR/user.keys" | head -1 | cut -d: -f2 | sed 's/ //g')
 cleos wallet import --name finality-test-network-wallet --private-key $USER_PRIVATE_KEY
 
-for user_name in usera userb userc userd usere userf userg userh useri userj userk userl userm usern usero userp userq userr users usert useru userv userw userx usery userz
+for user_name in usera userb userc userd usere userf userg userh useri userj \
+   userk userl userm usern usero userp userq userr users usert useru \
+   userv userw userx usery userz
 do
   # create user account
   cleos --url $ENDPOINT_ONE system newaccount eosio ${user_name:?} ${USER_PUBLIC_KEY:?} --stake-net "50 EOS" --stake-cpu "50 EOS" --buy-ram "100 EOS"
