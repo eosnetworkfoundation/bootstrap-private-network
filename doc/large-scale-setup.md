@@ -3,7 +3,7 @@
 Changes you may consider when setting up a large multi-node network.
 
 ## Installing Software
-There is a missing step to copy the Leap deb packages to all hosts. The Step by Step and reference scripts assume a single host with several separate processes running nodeos on different ports. In a multi-host setup this isn't the case.
+There is a missing step to copy the Spring deb packages to all hosts. The Step by Step and reference scripts assume a single host with several separate processes running nodeos on different ports. In a multi-host setup this isn't the case.
 
 ## Configuration
 - Increase `chain-state-db-size-mb` in `config.ini` to production levels.

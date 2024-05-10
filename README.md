@@ -44,12 +44,12 @@ See [Step By Step](doc/step-by-step.md)
 Changes for larger [multi-host production systems](doc/large-scale-setup.md)
 
 ## Versions of this Repo
-Listing of [Versions](doc/change-list.md) between releases of this bootstrap repo across Antelope software. See [Latest Change Log](changes/March182024.md) for PRs between releases. 
+Listing of [Versions](doc/change-list.md) between releases of this bootstrap repo across Antelope software. See [Latest Change Log](changes/May102024.md) for PRs between releases.
 
 
 ## Frequently Asked Questions
-Q: Why is nodeos version `5.1.0-dev`?
-A: The current Savanna is in development as a branch of the `5.0` release. Proper release versions will be set as we get closer to releasing the software.
+Q: Why is nodeos version `v1.0.0-dev`?
+A: The version was reset to `v1` with the new launch of Spring.
 
 Q: How do I free up more disk space?
 A: Docker can chew up a lot of space try the following commands
