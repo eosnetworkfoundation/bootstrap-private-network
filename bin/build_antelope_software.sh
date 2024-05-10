@@ -45,7 +45,7 @@ git submodule update --init --recursive
 
 mkdir build
 cd build || exit
-export leap_DIR="$SPRING_BUILD_DIR"/lib/cmake/spring
+export spring_DIR="$SPRING_BUILD_DIR"/lib/cmake/spring
 cmake .. >> "$LOG_DIR"/cdt_build_log.log 2>&1
 make -j ${NPROC} >> "$LOG_DIR"/cdt_build_log.log 2>&1
 echo "FINSIHED BUILDING CDT"

@@ -14,7 +14,7 @@ https://github.com/eosnetworkfoundation/bootstrap-private-network/blob/main/Ante
 You will need to build the following Antelope software from source, using the specified git branches. The software should be built in the following order to satisfy dependancies `Spring`, followed by `CDT`, followed by `Reference Contracts`.
 
 These Git Commit Hashes or Tags are current to the following date.
-https://github.com/eosnetworkfoundation/bootstrap-private-network/blob/fc95bfc37599b8b848d1d06ed47d5d6892b00868/bin/docker-build-image.sh#L17
+https://github.com/eosnetworkfoundation/bootstrap-private-network/blob/3294441405fe45cfeb417e606fbf2cd6d6f75a09/bin/docker-build-image.sh#L17
 
 ### Branches
 - Spring: branch `release/1.0-beta1` repo `AntelopeIO/spring`
@@ -34,20 +34,22 @@ Before we can start up our multi-producer blockchain a few preparations are need
 #### `Create New Key Pair`
 We will create a new key pair for the root user of the blockchain. You will use the Public Key often in the setup, so please save these keys for use later. You will see a `PublicKey` and `PrivateKey` printed to the console using the following command.
 `cleos create key --to-console`
+We create three additional key pairs for each of our producers. Here the producers are named `bpa`, `bpb`, `bpc`.
+https://github.com/eosnetworkfoundation/bootstrap-private-network/blob/3294441405fe45cfeb417e606fbf2cd6d6f75a09/bin/finality_test_network.sh#L72-L80
 #### `Create Genesis File`
 Take the reference [Genesis File](/config/genesis.json) and replace the value for `Initial Key` with the `PublicKey` generated previously. Replace the the value for `Initial Timestamp` with now. In linux you can get the correct format for the date with the following command `date +%FT%T.%3N`.
 #### `Create Shared Config`
 We will create a shared config file for the common configuration values. Configuration here is only for preview development purposes and should not be used as a reference production config. Copy [config.ini](/config/config.ini) to your filesystem. Additional configuration values will be added on the command line.
 #### `Create Log and Data Dir`
 You will need to create three data directories, one for each instance of nodeos you will run. You will need a place for log files as well. For example:
-https://github.com/eosnetworkfoundation/bootstrap-private-network/blob/fc95bfc37599b8b848d1d06ed47d5d6892b00868/bin/finality_test_network.sh#L79-L82
+https://github.com/eosnetworkfoundation/bootstrap-private-network/blob/3294441405fe45cfeb417e606fbf2cd6d6f75a09/bin/finality_test_network.sh#L87-L90
 #### `Create Wallet`
 You need to create and import the root private key into a wallet. This will allow you to run initialization commands on the blockchain. In the example below we have a named wallet and we save the wallet password to a file.
-https://github.com/eosnetworkfoundation/bootstrap-private-network/blob/fc95bfc37599b8b848d1d06ed47d5d6892b00868/bin/open_wallet.sh#L14
-Then import your `PrivateKey` adding it to the wallet
-https://github.com/eosnetworkfoundation/bootstrap-private-network/blob/fc95bfc37599b8b848d1d06ed47d5d6892b00868/bin/finality_test_network.sh#L89-L90
+https://github.com/eosnetworkfoundation/bootstrap-private-network/blob/3294441405fe45cfeb417e606fbf2cd6d6f75a09/bin/finality_test_network.sh#L72
+Then import your Root `PrivateKey` adding it to the wallet. We do not need to import our keys for each of the block producers.
+https://github.com/eosnetworkfoundation/bootstrap-private-network/blob/3294441405fe45cfeb417e606fbf2cd6d6f75a09/bin/finality_test_network.sh#L97-L98
 If you have already created a wallet you may need to unlock your wallet using your password
-https://github.com/eosnetworkfoundation/bootstrap-private-network/blob/fc95bfc37599b8b848d1d06ed47d5d6892b00868/bin/open_wallet.sh#L19
+https://github.com/eosnetworkfoundation/bootstrap-private-network/blob/3294441405fe45cfeb417e606fbf2cd6d6f75a09/bin/open_wallet.sh#L19
 #### `Initialization Data`
 Taking everything we have prepared we will now start a `nodoes` instance. We will be issuing commands while nodes is running so run this command in the background, or be prepared to open multiple terminals on your host. You'll notice we specified the
 - genesis file
@@ -55,7 +57,7 @@ Taking everything we have prepared we will now start a `nodoes` instance. We wil
 - data directory for first instance
 - public and private key from our very first step
 It is very important to include the option `--enable-stale-production`, we will need that to bootstrap our network.
-https://github.com/eosnetworkfoundation/bootstrap-private-network/blob/fc95bfc37599b8b848d1d06ed47d5d6892b00868/bin/finality_test_network.sh#L94-L101
+https://github.com/eosnetworkfoundation/bootstrap-private-network/blob/3294441405fe45cfeb417e606fbf2cd6d6f75a09/bin/finality_test_network.sh#L102-L109
 
 ## Creating Contracts and Accounts
 One the node is running we need to run two scripts to add accounts and contracts. We break down this process into three steps.
@@ -71,13 +73,13 @@ One the node is running we need to run two scripts to add accounts and contracts
 - PublicKey
 
 This script creates the system accounts.
-https://github.com/eosnetworkfoundation/bootstrap-private-network/blob/fc95bfc37599b8b848d1d06ed47d5d6892b00868/bin/boot_actions.sh#L15-L24
+https://github.com/eosnetworkfoundation/bootstrap-private-network/blob/3294441405fe45cfeb417e606fbf2cd6d6f75a09/bin/boot_actions.sh#L15-L24
 
 We create 380,000,000 EOS tokens.
 https://github.com/eosnetworkfoundation/bootstrap-private-network/blob/05d5b9c9806dbcd0a593a4108386b1e6f1a4dc24/bin/boot_actions.sh#L26-L28
 
 Below we activate the protocols needed to support Savanna and create the `boot`, and `system` contracts.
-https://github.com/eosnetworkfoundation/bootstrap-private-network/blob/fc95bfc37599b8b848d1d06ed47d5d6892b00868/bin/boot_actions.sh#L30-L77
+https://github.com/eosnetworkfoundation/bootstrap-private-network/blob/3294441405fe45cfeb417e606fbf2cd6d6f75a09/bin/boot_actions.sh#L32-L80
 
 #### `Create Accounts`
 
@@ -110,11 +112,11 @@ Now we start our three nodes peer'd to each other. The Second and Third nodes wi
 In the examples below we user different `PublicKey` and `PrivateKey` for each producer.
 
 #### `Node One`
-https://github.com/eosnetworkfoundation/bootstrap-private-network/blob/fc95bfc37599b8b848d1d06ed47d5d6892b00868/bin/finality_test_network.sh#L119-L128
+https://github.com/eosnetworkfoundation/bootstrap-private-network/blob/3294441405fe45cfeb417e606fbf2cd6d6f75a09/bin/finality_test_network.sh#L134-L143
 #### `Node Two`
-https://github.com/eosnetworkfoundation/bootstrap-private-network/blob/fc95bfc37599b8b848d1d06ed47d5d6892b00868/bin/finality_test_network.sh#L134-L142
+https://github.com/eosnetworkfoundation/bootstrap-private-network/blob/3294441405fe45cfeb417e606fbf2cd6d6f75a09/bin/finality_test_network.sh#L152-L161
 #### `Node Three`
-https://github.com/eosnetworkfoundation/bootstrap-private-network/blob/fc95bfc37599b8b848d1d06ed47d5d6892b00868/bin/finality_test_network.sh#L158-L166
+https://github.com/eosnetworkfoundation/bootstrap-private-network/blob/3294441405fe45cfeb417e606fbf2cd6d6f75a09/bin/finality_test_network.sh#L180-L189
 
 ## Check Blocks Behind
 Here you can check the Head Block Number and Last Irreversible Block and see there are far apart. `cleos get info`
@@ -139,11 +141,11 @@ echo "signature-provider = ""${NODE_THREE_PUBLIC_KEY}""=KEY:""${NODE_THREE_PRIVA
 #### `Apply New Configuration`
 Now that the configuration is in the shared `config.ini` we need to stop and re-start all three nodes to load the new configuration. Find the pid and send `kill -15 $pid` to terminate all three instances. Now start up the nodes. Here are examples from our reference development script. The `signature-provided` argument on the command line is the [EOS Root Key Pair](/doc/step-by-step.md#create-new-key-pair) we created earlier, and it is still needed for this restart step.
 
-https://github.com/eosnetworkfoundation/bootstrap-private-network/blob/c1fdba2dcf8ff69d983292960f8ee49711105195/bin/finality_test_network.sh#L119-L128
+https://github.com/eosnetworkfoundation/bootstrap-private-network/blob/3294441405fe45cfeb417e606fbf2cd6d6f75a09/bin/finality_test_network.sh#L134-L143
 
-https://github.com/eosnetworkfoundation/bootstrap-private-network/blob/c1fdba2dcf8ff69d983292960f8ee49711105195/bin/finality_test_network.sh#L144-L152
+https://github.com/eosnetworkfoundation/bootstrap-private-network/blob/3294441405fe45cfeb417e606fbf2cd6d6f75a09/bin/finality_test_network.sh#L163-L172
 
-https://github.com/eosnetworkfoundation/bootstrap-private-network/blob/c1fdba2dcf8ff69d983292960f8ee49711105195/bin/finality_test_network.sh#L168-L176
+https://github.com/eosnetworkfoundation/bootstrap-private-network/blob/3294441405fe45cfeb417e606fbf2cd6d6f75a09/bin/finality_test_network.sh#L191-L200
 
 #### `Register Finalizer Key`
 The [activate_savanna.sh](/bin/activate_savanna.sh) script registers the finalizer keys. In this example we register one for each producer.
