@@ -14,16 +14,16 @@ if [ "$TUID" -eq 0 ]; then
   echo "running as root"
 
   ROOT_DIR=/local/eosnetworkfoundation
-  SPRING_BUILD_DIR="${ROOT_DIR}"/spring_build
+  SPRING_SOFTWARE_DIR="${ROOT_DIR}"/software/spring
   CDT_BUILD_DIR="${ROOT_DIR}"/repos/cdt/build
 
-  cd "${SPRING_BUILD_DIR:?}" || exit
+  cd "${SPRING_SOFTWARE_DIR:?}" || exit
   PRIME_LOC='./spring_[1-9].[0-9].[0-9]*-ubuntu22.04_amd64.deb'
-  SECOND_LOC='./_CPack_Packages/Linux/DEB/spring_[1-9].[0-9].[0-9]*-ubuntu22.04_amd64.deb'
   if [ -e $PRIME_LOC ]; then
     dpkg -i $PRIME_LOC
   else
-    dpkg -i $SECOND_LOC
+    echo "Can not find spring software deb package"
+    exit 1
   fi
 
   cd "${CDT_BUILD_DIR:?}" || exit
