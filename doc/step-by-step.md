@@ -121,7 +121,7 @@ https://github.com/eosnetworkfoundation/bootstrap-private-network/blob/329444140
 ## Check Blocks Behind
 Here you can check the Head Block Number and Last Irreversible Block and see there are far apart. `cleos get info`
 
-## Active Savana
+## Activate Savanna
 For the last step we will activate the new Savanna algorithm.
 
 #### `Generate Finalizer Keys`
