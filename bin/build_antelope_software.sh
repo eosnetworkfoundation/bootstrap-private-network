@@ -23,6 +23,8 @@ SPRING_BUILD_DIR="${ROOT_DIR}"/spring_build
 LOG_DIR=/bigata1/log
 cd "${SPRING_GIT_DIR:?}" || exit
 
+# NOTE the branch specified here doesn't change anything
+# Docker Build sets branch with --single-branch option prevent other branches from being pulled in
 git checkout $SPRING_GIT_COMMIT_TAG
 git pull origin $SPRING_GIT_COMMIT_TAG
 git submodule update --init --recursive
@@ -39,6 +41,8 @@ echo "FINISHED BUILDING SPRING"
 echo "BUILDING CDT FROM ${CDT_GIT_COMMIT_TAG}"
 cd "${ROOT_DIR:?}"/repos/cdt || exit
 
+# NOTE the branch specified here doesn't change anything
+# Docker Build sets branch with --single-branch option prevent other branches from being pulled in
 git checkout $CDT_GIT_COMMIT_TAG
 git pull origin $CDT_GIT_COMMIT_TAG
 git submodule update --init --recursive

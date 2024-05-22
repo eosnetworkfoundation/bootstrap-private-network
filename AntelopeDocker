@@ -36,7 +36,7 @@ USER enfuser
 WORKDIR /local/eosnetworkfoundation
 RUN mkdir /local/eosnetworkfoundation/repos
 WORKDIR /local/eosnetworkfoundation/repos
-RUN git clone -b main --single-branch https://github.com/AntelopeIO/spring.git
+RUN git clone -b release/1.0-beta1 --single-branch https://github.com/AntelopeIO/spring.git
 RUN git clone -b release/4.1 --single-branch https://github.com/AntelopeIO/cdt.git
 RUN git clone https://github.com/AntelopeIO/reference-contracts.git
 RUN git clone --single-branch https://github.com/eosnetworkfoundation/bootstrap-private-network.git
