@@ -49,9 +49,9 @@ cleos --url $ENDPOINT push action eosio activate '["63320dd4a58212e4d32d1f58926b
 cleos --url $ENDPOINT push action eosio activate '["68dcaa34c0517d19666e6b33add67351d8c5f69e999ca1e37931bc410a297428"]' -p eosio
 # ACTION_RETURN_VALUE
 cleos --url $ENDPOINT push action eosio activate '["c3a6138c5061cf291310887c0b5c71fcaffeab90d5deb50d3b9e687cead45071"]' -p eosio
-# INSTANT_FINALITY
+# SAVANNA
 # Depends on WTMSIG_BLOCK_SIGNATURES , BLS_PRIMITIVES2 , DISALLOW_EMPTY_PRODUCER_SCHEDULE , ACTION_RETURN_VALUE
-cleos --url $ENDPOINT push action eosio activate '["18b790108f5e277cf7141dc626a98f7edeb776912278e4cd14a50b763d1d6390"]' -p eosio
+cleos --url $ENDPOINT push action eosio activate '["cbe0fafc8fcc6cc998395e9b6de6ebd94644467b1b4a97ec126005df07013c52"]' -p eosio
 # ONLY_LINK_TO_EXISTING_PERMISSION
 cleos --url $ENDPOINT push action eosio activate '["1a99a59d87e06e09ec5b028a9cbb7749b4a5ad8819004365d02dc4379a8b7241"]' -p eosio
 # FORWARD_SETCODE
