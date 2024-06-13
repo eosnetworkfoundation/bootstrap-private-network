@@ -24,6 +24,7 @@ CONTRACT_DIR="/local/eosnetworkfoundation/repos/reference-contracts/build/contra
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 GENESIS_FILE="/local/eosnetworkfoundation/repos/bootstrap-private-network/config/genesis.json"
 CONFIG_FILE="/local/eosnetworkfoundation/repos/bootstrap-private-network/config/config.ini"
+LOGGING_JSON="/local/eosnetworkfoundation/repos/bootstrap-private-network/config/logging.json"
 
 ######
 # Stop Function to shutdown all nodes
@@ -90,6 +91,7 @@ start_func() {
     [ ! -d "$ROOT_DIR"/nodeos-three/data ] && mkdir -p "$ROOT_DIR"/nodeos-three/data
     # setup common config, shared by all nodoes instances
     cp "${CONFIG_FILE}" ${ROOT_DIR}/config.ini
+    cp "${LOGGING_JSON}" ${ROOT_DIR}/logging.json
   fi
 
   # setup wallet
@@ -140,7 +142,7 @@ start_func() {
     --config "$ROOT_DIR"/config.ini \
     --data-dir "$ROOT_DIR"/nodeos-one/data \
     --p2p-peer-address 127.0.0.1:2444 \
-    --p2p-peer-address 127.0.0.1:3444 > $LOG_DIR/nodeos-one.log 2>&1 &
+    --p2p-peer-address 127.0.0.1:3444 --logconf "$ROOT_DIR"/logging.json > $LOG_DIR/nodeos-one.log 2>&1 &
 
   # start nodeos two
   echo "please wait while we fire up the second node"
