@@ -14,7 +14,7 @@ https://github.com/eosnetworkfoundation/bootstrap-private-network/blob/main/Ante
 You will need to build the following Antelope software from source, using the specified git branches. The software should be built in the following order to satisfy dependancies `Spring`, followed by `CDT`, followed by `Reference Contracts`.
 
 These Git Commit Hashes or Tags are current to the following date.
-https://github.com/eosnetworkfoundation/bootstrap-private-network/blob/3294441405fe45cfeb417e606fbf2cd6d6f75a09/bin/docker-build-image.sh#L17
+https://github.com/eosnetworkfoundation/bootstrap-private-network/blob/6253aea3de0ea4b2c4cbf7e24b8723ca7b655643/bin/docker-build-image.sh#L17
 
 ### Branches
 - Spring: branch `release/1.0-beta2` repo `AntelopeIO/spring`
