@@ -91,8 +91,15 @@ start_func() {
     [ ! -d "$ROOT_DIR"/nodeos-b/data ] && mkdir -p "$ROOT_DIR"/nodeos-b/data
     [ ! -d "$ROOT_DIR"/nodeos-c/data ] && mkdir -p "$ROOT_DIR"/nodeos-c/data
     [ ! -d "$ROOT_DIR"/nodeos-d/data ] && mkdir -p "$ROOT_DIR"/nodeos-d/data
+    [ ! -d "$ROOT_DIR"/nodeos-a/config ] && mkdir -p "$ROOT_DIR"/nodeos-a/config
+    [ ! -d "$ROOT_DIR"/nodeos-b/config ] && mkdir -p "$ROOT_DIR"/nodeos-b/config
+    [ ! -d "$ROOT_DIR"/nodeos-c/config ] && mkdir -p "$ROOT_DIR"/nodeos-c/config
+    [ ! -d "$ROOT_DIR"/nodeos-d/config ] && mkdir -p "$ROOT_DIR"/nodeos-d/config
     # setup common config, shared by all nodoes instances
-    cp "${CONFIG_FILE}" ${ROOT_DIR}/config.ini
+    cp "${CONFIG_FILE}" ${ROOT_DIR}/nodeos-a/config/config.ini
+    cp "${CONFIG_FILE}" ${ROOT_DIR}/nodeos-b/config/config.ini
+    cp "${CONFIG_FILE}" ${ROOT_DIR}/nodeos-c/config/config.ini
+    cp "${CONFIG_FILE}" ${ROOT_DIR}/nodeos-d/config/config.ini
     cp "${LOGGING_JSON}" ${ROOT_DIR}/logging.json
   fi
 
@@ -103,13 +110,13 @@ start_func() {
 
   # start nodeos one always allow stale production
   if [ "$COMMAND" == "CREATE" ]; then
-    nodeos --genesis-json ${ROOT_DIR}/genesis.json --agent-name "Finality Test Node A" \
+    nodeos --genesis-json ${ROOT_DIR}/genesis.json --agent-name "Wave3 Test Node A" \
       --http-server-address 0.0.0.0:${NODEOS_A_PORT} \
       --p2p-listen-endpoint 0.0.0.0:1444 \
       --enable-stale-production \
       --producer-name eosio \
       --signature-provider ${EOS_ROOT_PUBLIC_KEY}=KEY:${EOS_ROOT_PRIVATE_KEY} \
-      --config "$ROOT_DIR"/config.ini \
+      --config "$ROOT_DIR"/nodeos-a/config/config.ini \
       --data-dir "$ROOT_DIR"/nodeos-a/data > $LOG_DIR/nodeos-a.log 2>&1 &
     NODEOS_ONE_PID=$!
 
@@ -127,23 +134,34 @@ start_func() {
     sleep 5
   fi
 
+  echo "setting up node A"
   # if CREATE we bootstraped the node and killed it
   # if START we have no node running
   # either way we need to start Node One
   BPA_PRIVATE_KEY=$(grep Private "$WALLET_DIR/bpa.keys" | head -1 | cut -d: -f2 | sed 's/ //g')
   BPA_PUBLIC_KEY=$(grep Public "$WALLET_DIR/bpa.keys" | head -1 | cut -d: -f2 | sed 's/ //g')
-  nodeos --agent-name "Finality Test Node A" \
+  nodeos --agent-name "Wave3 Test Node A" \
     --http-server-address 0.0.0.0:${NODEOS_A_PORT} \
     --p2p-listen-endpoint 0.0.0.0:1444 \
     --enable-stale-production \
     --producer-name bpa \
     --signature-provider ${BPA_PUBLIC_KEY}=KEY:${BPA_PRIVATE_KEY} \
-    --config "$ROOT_DIR"/config.ini \
+    --config "$ROOT_DIR"/nodeos-a/config/config.ini \
     --data-dir "$ROOT_DIR"/nodeos-a/data \
     --logconf "$ROOT_DIR"/logging.json > $LOG_DIR/nodeos-a.log 2>&1 &
+  echo $! > "$ROOT_DIR"/nodeos-a/config/this.pid
+  echo "nodeos --agent-name \"Wave3 Test Node A\" \
+    --http-server-address 0.0.0.0:${NODEOS_A_PORT} \
+    --p2p-listen-endpoint 0.0.0.0:1444 \
+    --enable-stale-production \
+    --producer-name bpa \
+    --signature-provider ${BPA_PUBLIC_KEY}=KEY:${BPA_PRIVATE_KEY} \
+    --config \"$ROOT_DIR\"/nodeos-a/config/config.ini \
+    --data-dir \"$ROOT_DIR\"/nodeos-a/data \
+    --logconf \"$ROOT_DIR\"/logging.json > $LOG_DIR/nodeos-a.log 2>&1 &" > "$ROOT_DIR"/nodeos-a/start.sh
 
   # start nodeos two
-  echo "please wait while we fire up the second node"
+  echo "please wait while we fire up the node B"
   sleep 2
 
   BPB_PRIVATE_KEY=$(grep Private "$WALLET_DIR/bpb.keys" | head -1 | cut -d: -f2 | sed 's/ //g')
@@ -155,9 +173,10 @@ start_func() {
       --enable-stale-production \
       --producer-name bpb \
       --signature-provider ${BPB_PUBLIC_KEY}=KEY:${BPB_PRIVATE_KEY} \
-      --config "$ROOT_DIR"/config.ini \
+      --config "$ROOT_DIR"/nodeos-b/config/config.ini \
       --data-dir "$ROOT_DIR"/nodeos-b/data \
       --p2p-peer-address 127.0.0.1:1444  > $LOG_DIR/nodeos-b.log 2>&1 &
+    echo $! > "$ROOT_DIR"/nodeos-b/config/this.pid
   else
     nodeos --agent-name "Wave3 Test Node B" \
       --http-server-address 0.0.0.0:${NODEOS_B_PORT} \
@@ -165,11 +184,21 @@ start_func() {
       --enable-stale-production \
       --producer-name bpb \
       --signature-provider ${BPB_PUBLIC_KEY}=KEY:${BPB_PRIVATE_KEY} \
-      --config "$ROOT_DIR"/config.ini \
+      --config "$ROOT_DIR"/nodeos-b/config/config.ini \
       --data-dir "$ROOT_DIR"/nodeos-b/data \
       --p2p-peer-address 127.0.0.1:1444 > $LOG_DIR/nodeos-b.log 2>&1 &
+    echo $! > "$ROOT_DIR"/nodeos-b/config/this.pid
+    echo "nodeos --agent-name \"Wave3 Test Node B\" \
+      --http-server-address 0.0.0.0:${NODEOS_B_PORT} \
+      --p2p-listen-endpoint 0.0.0.0:2444 \
+      --enable-stale-production \
+      --producer-name bpb \
+      --signature-provider ${BPB_PUBLIC_KEY}=KEY:${BPB_PRIVATE_KEY} \
+      --config \"$ROOT_DIR\"/nodeos-b/config/config.ini \
+      --data-dir \"$ROOT_DIR\"/nodeos-b/data \
+      --p2p-peer-address 127.0.0.1:1444 > $LOG_DIR/nodeos-b.log 2>&1 &" > "$ROOT_DIR"/nodeos-b/start.sh
   fi
-  echo "please wait while we fire up the third node"
+  echo "please wait while we fire up the node C"
   sleep 5
 
   BPC_PRIVATE_KEY=$(grep Private "$WALLET_DIR/bpc.keys" | head -1 | cut -d: -f2 | sed 's/ //g')
@@ -181,9 +210,10 @@ start_func() {
       --enable-stale-production \
       --producer-name bpc \
       --signature-provider ${BPC_PUBLIC_KEY}=KEY:${BPC_PRIVATE_KEY} \
-      --config "$ROOT_DIR"/config.ini \
+      --config "$ROOT_DIR"/nodeos-c/config/config.ini \
       --data-dir "$ROOT_DIR"/nodeos-c/data \
       --p2p-peer-address 127.0.0.1:2444 > $LOG_DIR/nodeos-c.log 2>&1 &
+    echo $! > "$ROOT_DIR"/nodeos-c/config/this.pid
   else
     nodeos --agent-name "Wave3 Test Node C" \
       --http-server-address 0.0.0.0:${NODEOS_C_PORT} \
@@ -191,12 +221,22 @@ start_func() {
       --enable-stale-production \
       --producer-name bpc \
       --signature-provider ${BPC_PUBLIC_KEY}=KEY:${BPC_PRIVATE_KEY} \
-      --config "$ROOT_DIR"/config.ini \
+      --config "$ROOT_DIR"/nodeos-c/config/config.ini \
       --data-dir "$ROOT_DIR"/nodeos-c/data \
       --p2p-peer-address 127.0.0.1:2444 > $LOG_DIR/nodeos-c.log 2>&1 &
+    echo $! > "$ROOT_DIR"/nodeos-c/config/this.pid
+    echo "nodeos --agent-name \"Wave3 Test Node C\" \
+      --http-server-address 0.0.0.0:${NODEOS_C_PORT} \
+      --p2p-listen-endpoint 0.0.0.0:3444 \
+      --enable-stale-production \
+      --producer-name bpc \
+      --signature-provider ${BPC_PUBLIC_KEY}=KEY:${BPC_PRIVATE_KEY} \
+      --config \"$ROOT_DIR\"/nodeos-c/config/config.ini \
+      --data-dir \"$ROOT_DIR\"/nodeos-c/data \
+      --p2p-peer-address 127.0.0.1:2444 > $LOG_DIR/nodeos-c.log 2>&1 &" > "$ROOT_DIR"/nodeos-c/start.sh
   fi
 
-  echo "please wait while we fire up the third node"
+  echo "please wait while we fire up the node D"
   sleep 5
 
   BPD_PRIVATE_KEY=$(grep Private "$WALLET_DIR/bpd.keys" | head -1 | cut -d: -f2 | sed 's/ //g')
@@ -208,19 +248,30 @@ start_func() {
       --enable-stale-production \
       --producer-name bpd \
       --signature-provider ${BPD_PUBLIC_KEY}=KEY:${BPD_PRIVATE_KEY} \
-      --config "$ROOT_DIR"/config.ini \
+      --config "$ROOT_DIR"/nodeos-d/config/config.ini \
       --data-dir "$ROOT_DIR"/nodeos-d/data \
       --p2p-peer-address 127.0.0.1:3444 > $LOG_DIR/nodeos-d.log 2>&1 &
+    echo $! > "$ROOT_DIR"/nodeos-d/config/this.pid
   else
-    nodeos --agent-name "Wave3 Test Node C" \
+    nodeos --agent-name "Wave3 Test Node D" \
       --http-server-address 0.0.0.0:${NODEOS_D_PORT} \
       --p2p-listen-endpoint 0.0.0.0:4444 \
       --enable-stale-production \
       --producer-name bpd \
       --signature-provider ${BPD_PUBLIC_KEY}=KEY:${BPD_PRIVATE_KEY} \
-      --config "$ROOT_DIR"/config.ini \
+      --config "$ROOT_DIR"/nodeos-d/config/config.ini \
       --data-dir "$ROOT_DIR"/nodeos-d/data \
       --p2p-peer-address 127.0.0.1:3444 > $LOG_DIR/nodeos-d.log 2>&1 &
+    echo $! > "$ROOT_DIR"/nodeos-d/config/this.pid
+    echo "nodeos --agent-name \"Wave3 Test Node D\" \
+          --http-server-address 0.0.0.0:${NODEOS_D_PORT} \
+          --p2p-listen-endpoint 0.0.0.0:4444 \
+          --enable-stale-production \
+          --producer-name bpd \
+          --signature-provider ${BPD_PUBLIC_KEY}=KEY:${BPD_PRIVATE_KEY} \
+          --config \"$ROOT_DIR\"/nodeos-d/config/config.ini \
+          --data-dir \"$ROOT_DIR\"/nodeos-d/data \
+          --p2p-peer-address 127.0.0.1:3444 > $LOG_DIR/nodeos-d.log 2>&1 &" > "$ROOT_DIR"/nodeos-d/start.sh
   fi
 
   echo "waiting for production network to sync up..."
@@ -242,7 +293,11 @@ if [ "$COMMAND" == "CLEAN" ]; then
         [ -f "$ROOT_DIR"/${d}/data/state/shared_memory.bin ] && rm -f "$ROOT_DIR"/${d}/data/state/shared_memory.bin
         [ -f "$ROOT_DIR"/${d}/data/state/code_cache.bin ] && rm -f "$ROOT_DIR"/${d}/data/state/code_cache.bin
         [ -f "$ROOT_DIR"/${d}/data/blocks/reversible/fork_db.dat ] && rm -f "$ROOT_DIR"/${d}/data/blocks/reversible/fork_db.dat
+        [ -f "$ROOT_DIR"/${d}/config/config.ini ] && mv "$ROOT_DIR"/"${d}"/config/config.ini "$ROOT_DIR"/"${d}-config.prev.ini"
     done
+    [ -f "$ROOT_DIR"/genesis.json ] && mv "$ROOT_DIR"/genesis.json "$ROOT_DIR"/genesis.prev.json
+    [ -f "$ROOT_DIR"/logging.json ] && mv "$ROOT_DIR"/logging.json "$ROOT_DIR"/logging.prev.json
+    [ -f "$ROOT_DIR"/setfinalizer.json ] && mv "$ROOT_DIR"/setfinalizer.json "$ROOT_DIR"/setfinalizer.prev.json
 fi
 
 if [ "$COMMAND" == "CREATE" ] || [ "$COMMAND" == "START" ]; then
@@ -255,7 +310,6 @@ fi
 
 if [ "$COMMAND" == "SAVANNA" ]; then
   # get config information
-  NODEOS_A_PORT=8888
   ENDPOINT="http://127.0.0.1:${NODEOS_A_PORT}"
 
   echo "creating new finalizer BLS keys"
@@ -271,8 +325,25 @@ if [ "$COMMAND" == "SAVANNA" ]; then
       || exit 127
     PROOF_POSSESION+=( $(grep Possession "${WALLET_DIR}"/"${producer_name}.finalizer.key" | cut -d: -f2 | sed 's/ //g') ) \
       || exit 127
-    echo "# producer ${producer_name} finalizer key" >> "$ROOT_DIR"/config.ini
-    echo "signature-provider = ""${PUBLIC_KEY[@]: -1}""=KEY:""${PRIVATE_KEY[@]: -1}" >> "${ROOT_DIR}/config.ini"
+    CONFIG_DIR=""
+    if [ $producer_name == "bpa" ]; then
+      CONFIG_DIR="nodeos-a"
+    fi
+    if [ $producer_name == "bpb" ]; then
+      CONFIG_DIR="nodeos-b"
+    fi
+    if [ $producer_name == "bpc" ]; then
+      CONFIG_DIR="nodeos-c"
+    fi
+    if [ $producer_name == "bpd" ]; then
+      CONFIG_DIR="nodeos-d"
+    fi
+    if [ -z $CONFIG_DIR ]; then
+      echo "CONFIG_DIR empty can not find configuration file to write BLS key"
+      exit 127
+    fi
+    echo "# producer ${producer_name} finalizer key" >> "$ROOT_DIR"/${CONFIG_DIR}/config/config.ini
+    echo "signature-provider = ""${PUBLIC_KEY[@]: -1}""=KEY:""${PRIVATE_KEY[@]: -1}" >> "${ROOT_DIR}/${CONFIG_DIR}/config/config.ini"
   done
 
   echo "need to reload config: please wait shutting down node"

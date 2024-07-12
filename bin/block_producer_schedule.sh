@@ -12,6 +12,10 @@ cleos --url $ENDPOINT create account eosio bpc $BPC_PUBLIC_KEY $BPC_PUBLIC_KEY -
 BPD_PUBLIC_KEY=$(grep Public "$WALLET_DIR/bpd.keys" | head -1 | cut -d: -f2 | sed 's/ //g')
 cleos --url $ENDPOINT create account eosio bpd $BPD_PUBLIC_KEY $BPD_PUBLIC_KEY --max-cpu-usage-ms 0 --max-net-usage 0
 
+cleos --url $ENDPOINT_ONE transfer eosio bpa "10000 EOS" "init funding"
+cleos --url $ENDPOINT_ONE transfer eosio bpb "10000 EOS" "init funding"
+cleos --url $ENDPOINT_ONE transfer eosio bpc "10000 EOS" "init funding"
+
 cleos --url $ENDPOINT push action eosio setprods "{
     \"schedule\":[
         {
@@ -20,7 +24,7 @@ cleos --url $ENDPOINT push action eosio setprods "{
             \"block_signing_authority_v0\",{
               \"threshold\": 1,
               \"keys\": [{
-                  \"key\": \"$PUBLIC_KEY\",
+                  \"key\": \"$BPA_PUBLIC_KEY\",
                   \"weight\": 1
                 }
               ]
@@ -33,7 +37,7 @@ cleos --url $ENDPOINT push action eosio setprods "{
             \"block_signing_authority_v0\",{
               \"threshold\": 1,
               \"keys\": [{
-                  \"key\": \"$PUBLIC_KEY\",
+                  \"key\": \"$BPB_PUBLIC_KEY\",
                   \"weight\": 1
                 }
               ]
@@ -46,7 +50,7 @@ cleos --url $ENDPOINT push action eosio setprods "{
             \"block_signing_authority_v0\",{
               \"threshold\": 1,
               \"keys\": [{
-                  \"key\": \"$PUBLIC_KEY\",
+                  \"key\": \"$BPC_PUBLIC_KEY\",
                   \"weight\": 1
                 }
               ]
@@ -59,7 +63,7 @@ cleos --url $ENDPOINT push action eosio setprods "{
             \"block_signing_authority_v0\",{
               \"threshold\": 1,
               \"keys\": [{
-                  \"key\": \"$PUBLIC_KEY\",
+                  \"key\": \"$BPD_PUBLIC_KEY\",
                   \"weight\": 1
                 }
               ]
