@@ -1,0 +1,307 @@
+# WAVE 3 - Initial Setup
+
+# Review Bootstrap code repo https://github.com/eosnetworkfoundation/bootstrap-private-network/tree/wave3-testnet
+# Create Container and Enter Container
+# Capture Version of Nodeos
+date -u && nodeos --full-version
+-> DATE         VERSION
+# Capture Peering Configuration
+--> EOF
+
+--> EOF
+# CREATE AND STARTUP NETWORK
+date -u
+--> DATE
+./bin/finality_test_network.sh CREATE
+# setup logs
+tail -f nodoes-a.log | grep 'lib: |policy|Transition to instant finality'
+
+
+##### Wave-3-ReplaceNodeFinalizerKey #####
+date -u
+-> DATE
+mkdir /bigata1/log/Wave-3-ReplaceNodeFinalizerKey
+# Preserve Finalizer JSON
+cp /bigata1/savanna/setfinalizer.json /bigata1/log/Wave-3-ReplaceNodeFinalizerKey/setfinalizer-1.json
+# Preserve CONFIG & Start Scripts
+for n in nodeos-a nodes-b nodes-c nodes-d; do
+  cp /bigata1/savanna/${n}/config/config.ini /bigata1/log/Wave-3-ReplaceNodeFinalizerKey/${n}-config.ini
+  cp /bigata1/savanna/${n}/start.sh /bigata1/log/Wave-3-ReplaceNodeFinalizerKey/${n}-start.sh
+done
+# Kill Node A
+date -u && kill -15 $(cat /bigata1/savanna/nodeos-a/config/this.pid)
+# preserve logs
+cp /bigata1/savanna/log/nodeos-a.log /bigata1/log/Wave-3-ReplaceNodeFinalizerKey/nodeos-a-1.log
+# generate new BLS key, add to config, do not restart yet
+./bin/bls_key_helper.sh node-b-replacement >> /bigata1/savanna/nodeos-b/config/config.ini
+# update node-b keys in json
+cat ~/eosio-wallet/node-b-replacement.finalizer.key
+vi /bigata1/savanna/setfinalizer.json
+# preserve finalizer JSON
+cp /bigata1/savanna/setfinalizer.json /bigata1/log/Wave-3-ReplaceNodeFinalizerKey/setfinalizer-2.json
+./bin/open_wallet.sh ~/eosio-wallet
+# Current Head Current LIB
+date -u
+--> DATE       HEAD        LIB
+# view and copy into buffer
+cat /bigata1/savanna/setfinalizer.json
+date -u && cleos --url http://127.0.0.1:7888 push action eosio setfinalizer '' -p eosio@active
+--> DATE
+# Current Head and Current LIB; Verify LIB stops progressing
+date -u
+--> DATE       HEAD       LIB
+# Restart Node B
+date -u && kill -15 $(cat /bigata1/savanna/nodeos-b/config/this.pid)
+# preserve logs
+cp /bigata1/savanna/log/nodeos-b.log /bigata1/log/Wave-3-ReplaceNodeFinalizerKey/nodeos-b-1.log
+# Start Node-B
+cat /bigata1/savanna/nodeos-b/start.sh
+date -u
+--> DATE
+# Verify LIB Catchup Up after B Restart
+# Catchup LIB and HEAD
+date -u
+--> DATE       HEAD           LIB
+# Stop All Nodes and Preserve Logs
+./bin/finality_test_network.sh STOP
+for n in nodeos-a nodes-b nodes-c nodes-d; do
+  cp /bigata1/savanna/log/${n}.log /bigata1/log/Wave-3-ReplaceNodeFinalizerKey/${n}-final.log
+done
+date -u
+--> DATE
+
+##### Wave-3-PolicyWeightChange #####
+date -u
+-> DATE
+mkdir /bigata1/log/Wave-3-Wave-3-PolicyWeightChange
+# Preserve Finalizer JSON
+cp /bigata1/savanna/setfinalizer.json /bigata1/log/Wave-3-PolicyWeightChange/setfinalizer-1.json
+./bin/finality_test_network.sh START
+# Preserve CONFIG & Start Scripts
+for n in nodeos-a nodes-b nodes-c nodes-d; do
+  cp /bigata1/savanna/${n}/config/config.ini /bigata1/log/Wave-3-PolicyWeightChange/${n}-config.ini
+  cp /bigata1/savanna/${n}/start.sh /bigata1/log/Wave-3-PolicyWeightChange/${n}-start.sh
+done
+# Record Current Head and Lib
+date -u
+--> DATE       HEAD      LIB
+# Shutdown Node-a
+date -u && kill -15 $(cat /bigata1/savanna/nodeos-a/config/this.pid)
+--> DATE
+# Preserve Logs
+cp /bigata1/log/nodeos-a.log /bigata1/log/Wave-3-PolicyWeightChange/nodeos-a-1.log
+# Observer Finality Continues to Advances
+date -u
+--> DATE       HEAD        LIB
+# Update Threshold =4 Node-A Weight =2
+vi /bigata1/savanna/setfinalizer.json
+# preserve finalizer JSON
+cp /bigata1/savanna/setfinalizer.json /bigata1/log/Wave-3-PolicyWeightChange/setfinalizer-2.json
+./bin/open_wallet.sh ~/eosio-wallet
+# Current Head Current LIB
+date -u
+--> DATE       HEAD      LIB
+# view and copy into buffer
+cat /bigata1/savanna/setfinalizer.json
+date -u && cleos --url http://127.0.0.1:7888 push action eosio setfinalizer '' -p eosio@active
+--> DATE
+# Record Policy Block; Wait for Policy to Roll Out
+--> DATE       POLICY-HEAD-BLOCK
+# Current Head and Current LIB; LIB Stops Advancing
+date -u
+--> DATE       HEAD      LIB
+# Shutdown Node D
+date -u && kill -15 $(cat /bigata1/savanna/nodeos-d/config/this.pid)
+--> DATE
+# Current Head and Current LIB; LIB Stops Advancing
+date -u
+--> DATE      HEAD       LIB
+# Restart Node A
+cat /bigata1/savanna/nodeos-a/start.sh
+date -u
+--> DATE
+# Current LIB and HEAD; Observe LIB catches up to HEAD-3
+date -u
+--> DATE      HEAD      LIB
+# Stop All Nodes and Preserve Logs
+./bin/finality_test_network.sh STOP
+for n in nodeos-a nodes-b nodes-c nodes-d; do
+  cp /bigata1/savanna/log/${n}.log /bigata1/log/Wave-3-PolicyWeightChange/${n}-final.log
+done
+date -u
+--> DATE
+
+
+##### Wave-3-ReduceThreshReplaceKeys #####
+date -u
+-> DATE
+mkdir /bigata1/log/Wave-3-ReduceThreshReplaceKeys
+# Preserve Finalizer JSON
+cp /bigata1/savanna/setfinalizer.json /bigata1/log/Wave-3-ReduceThreshReplaceKeys/setfinalizer-1.json
+./bin/finality_test_network.sh START
+# Preserve CONFIG & Start Scripts
+for n in nodeos-a nodes-b nodes-c nodes-d; do
+  cp /bigata1/savanna/${n}/config/config.ini /bigata1/log/Wave-3-ReduceThreshReplaceKeys/${n}-config.ini
+  cp /bigata1/savanna/${n}/start.sh /bigata1/log/Wave-3-ReduceThreshReplaceKeys/${n}-start.sh
+done
+# Shutdown Node-D
+date -u && kill -15 $(cat /bigata1/savanna/nodeos-d/config/this.pid)
+--> DATE
+# Preserve Logs
+cp /bigata1/log/nodeos-d.log /bigata1/log/Wave-3-ReduceThreshReplaceKeys/nodeos-d-1.log
+# Verify LIB Advancing
+date -u
+--> DATE       HEAD      LIB
+# Shutdown Nodes B, C, D
+date -u && kill -15 $(cat /bigata1/savanna/nodeos-b/config/this.pid)
+date -u && kill -15 $(cat /bigata1/savanna/nodeos-c/config/this.pid)
+date -u && kill -15 $(cat /bigata1/savanna/nodeos-d/config/this.pid)
+# Preserve Logs
+cp /bigata1/log/nodeos-b.log /bigata1/log/Wave-3-ReduceThreshReplaceKeys/nodeos-b-1.log
+cp /bigata1/log/nodeos-c.log /bigata1/log/Wave-3-ReduceThreshReplaceKeys/nodeos-c-1.log
+cp /bigata1/log/nodeos-d.log /bigata1/log/Wave-3-ReduceThreshReplaceKeys/nodeos-d-1.log
+# Add BLS Keys to Config for Nodes B , C, D
+./bin/bls_key_helper.sh node-b-replaceall >> /bigata1/savanna/nodeos-b/config/config.ini
+./bin/bls_key_helper.sh node-c-replaceall >> /bigata1/savanna/nodeos-c/config/config.ini
+./bin/bls_key_helper.sh node-d-replaceall >> /bigata1/savanna/nodeos-d/config/config.ini
+# Restart Nodes B, C, D
+date -u
+--> DATE
+cat /bigata1/savanna/nodeos-b/start.sh
+cat /bigata1/savanna/nodeos-c/start.sh
+cat /bigata1/savanna/nodeos-d/start.sh
+date -u
+--> DATE
+# Current HEAD and LIB; Verify LIB progresses and Catches Up
+date -u
+--> DATE        HEAD       LIB
+# update Threshold=3
+vi /bigata1/savanna/setfinalizer.json
+# update node-b keys in finalizer json
+cat ~/eosio-wallet/node-b-replaceall.finalizer.key
+vi /bigata1/savanna/setfinalizer.json
+# update node-c keys in finalizer json
+cat ~/eosio-wallet/node-c-replaceall.finalizer.key
+vi /bigata1/savanna/setfinalizer.json
+# update node-d keys in finalizer json
+cat ~/eosio-wallet/node-d-replaceall.finalizer.key
+vi /bigata1/savanna/setfinalizer.json
+# preserve finalizer JSON
+cp /bigata1/savanna/setfinalizer.json /bigata1/log/Wave-3-ReplaceNodeFinalizerKey/setfinalizer-2.json
+./bin/open_wallet.sh ~/eosio-wallet
+# Current Head Current LIB
+date -u
+--> DATE       HEAD        LIB
+# Review schedule_snapshot.sh
+cat ./bin/schedule_snapshot.sh
+# Review javascript to prepare; sleep; broadcase trx
+cd transaction
+npm install
+less setfinalizer.js
+# Create dir to preserve snapshot
+mkdir -p /bigata1/savanna/nodeos-a/data/snapshots/target
+mkdir -p /bigata1/savanna/nodeos-a/data/snapshots/archive
+# Current Head Current LIB
+date -u
+# Run snapshot and update finalizer transaction
+cat ~/eosio/finality-test-network.keys
+date -u && ../bin/schedule_snapshot.sh && node setfinalizer.js /bigata1/savanna/setfinalizer.json KEY
+--> DATE        TRX-ID        TRX-BLOCK
+# Record Policy Block; Wait for Policy to Roll Out
+--> DATE        POLICY-HEAD-BLOCK
+# Record Snaphost Blocks
+--> START-BLOCK       END-BLOCK       TARGET-BLOCK #
+# Current HEAD Current LIB ; Validate LIB Continues to progress
+date -u
+--> DATE         HEAD       LIB
+# Archive Target
+mv /bigata1/savanna/nodeos-a/data/snapshots/snapshotXXXXX.bin /bigata1/savanna/nodeos-a/data/snapshots/target
+mv /bigata1/savanna/nodeos-a/data/snapshots/snapshot*.bin /bigata1/savanna/nodeos-a/data/snapshots/archive
+# STOP and PRESERVE LOGS
+# Stop All Nodes and Preserve Logs
+cd ..
+./bin/finality_test_network.sh STOP
+for n in nodeos-a nodes-b nodes-c nodes-d; do
+  cp /bigata1/savanna/log/${n}.log /bigata1/log/Wave-3-ReplaceNodeFinalizerKey/${n}-final.log
+done
+date -u
+--> DATE
+
+
+
+
+###### Wave-3-RestartFromSnapshot #######
+date -u
+-> DATE
+mkdir /bigata1/log/Wave-3-RestartFromSnapshot
+# Preserve Finalizer JSON
+cp /bigata1/savanna/setfinalizer.json /bigata1/log/Wave-3-RestartFromSnapshot/setfinalizer-1.json
+./bin/finality_test_network.sh START
+# Preserve CONFIG & Start Scripts
+for n in nodeos-a nodes-b nodes-c nodes-d; do
+  cp /bigata1/savanna/${n}/config/config.ini /bigata1/log/Wave-3-RestartFromSnapshot/${n}-config.ini
+  cp /bigata1/savanna/${n}/start.sh /bigata1/log/Wave-3-RestartFromSnapshot/${n}-start.sh
+done
+# LIB Advancing; Record Current Head and LIB
+date -u
+--> DATE       HEAD       LIB
+# Shutdown Nodes A, B, C, D and delete state
+date -u && kill -15 $(cat /bigata1/savanna/nodeos-a/config/this.pid)
+--> DATE
+date -u && kill -15 $(cat /bigata1/savanna/nodeos-b/config/this.pid)
+--> DATE
+date -u && kill -15 $(cat /bigata1/savanna/nodeos-c/config/this.pid)
+--> DATE
+date -u && kill -15 $(cat /bigata1/savanna/nodeos-d/config/this.pid)
+--> DATE
+# Preserve Logs
+cp /bigata1/log/nodeos-a.log /bigata1/log/Wave-3-ReduceThreshReplaceKeys/nodeos-a-1.log
+cp /bigata1/log/nodeos-b.log /bigata1/log/Wave-3-ReduceThreshReplaceKeys/nodeos-b-1.log
+cp /bigata1/log/nodeos-c.log /bigata1/log/Wave-3-ReduceThreshReplaceKeys/nodeos-c-1.log
+cp /bigata1/log/nodeos-d.log /bigata1/log/Wave-3-ReduceThreshReplaceKeys/nodeos-d-1.log
+# Remove State
+rm /bigata1/savanna/nodeos-a/data/state
+rm /bigata1/savanna/nodeos-b/data/state
+rm /bigata1/savanna/nodeos-c/data/state
+rm /bigata1/savanna/nodeos-d/data/state
+# update start add --snapshot /bigata1/savanna/nodeos-a/data/snapshots/target/snapshot*.bin
+vi /bigata1/savanna/nodeos-a/start.sh
+vi /bigata1/savanna/nodeos-b/start.sh
+vi /bigata1/savanna/nodeos-c/start.sh
+vi /bigata1/savanna/nodeos-d/start.sh
+# Restart Nodes B,C,D
+cat /bigata1/savanna/nodeos-b/start.sh
+date -u
+--> DATE
+cat /bigata1/savanna/nodeos-c/start.sh
+date -u
+--> DATE
+cat /bigata1/savanna/nodeos-d/start.sh
+date -u
+--> DATE
+# Current LIB Current HEAD ; blocks produced LIB frozen
+date -u
+--> DATE    LIB     HEAD
+# Restart Node A
+cat /bigata1/savanna/nodeos-a/start.sh
+date -u
+--> DATE
+# Record Policy Block; Wait for Policy to Roll Out
+--> DATE        POLICY-HEAD-BLOCK
+# Current HEAD Current LIB ; Validate LIB Continues to progress
+date -u
+--> DATE         HEAD       LIB
+# Shutdown A
+date -u && kill -15 $(cat /bigata1/savanna/nodeos-a/config/this.pid)
+--> DATE
+# Current HEAD Current LIB ; Validate LIB Continues to progress
+date -u
+--> DATE         HEAD       LIB
+# Stop All Nodes and Preserve Logs
+cd ..
+./bin/finality_test_network.sh STOP
+for n in nodeos-a nodes-b nodes-c nodes-d; do
+  cp /bigata1/savanna/log/${n}.log /bigata1/log/Wave-3-RestartFromSnapshot/${n}-final.log
+done
+date -u
+--> DATE

@@ -158,7 +158,8 @@ start_func() {
     --signature-provider ${BPA_PUBLIC_KEY}=KEY:${BPA_PRIVATE_KEY} \
     --config \"$ROOT_DIR\"/nodeos-a/config/config.ini \
     --data-dir \"$ROOT_DIR\"/nodeos-a/data \
-    --logconf \"$ROOT_DIR\"/logging.json > $LOG_DIR/nodeos-a.log 2>&1 &" > "$ROOT_DIR"/nodeos-a/start.sh
+    --logconf \"$ROOT_DIR\"/logging.json > $LOG_DIR/nodeos-a.log 2>&1 & \
+    echo \$! > $ROOT_DIR/nodeos-a/config/this.pid" > "$ROOT_DIR"/nodeos-a/start.sh
 
   # start nodeos two
   echo "please wait while we fire up the node B"
@@ -196,7 +197,8 @@ start_func() {
       --signature-provider ${BPB_PUBLIC_KEY}=KEY:${BPB_PRIVATE_KEY} \
       --config \"$ROOT_DIR\"/nodeos-b/config/config.ini \
       --data-dir \"$ROOT_DIR\"/nodeos-b/data \
-      --p2p-peer-address 127.0.0.1:1444 > $LOG_DIR/nodeos-b.log 2>&1 &" > "$ROOT_DIR"/nodeos-b/start.sh
+      --p2p-peer-address 127.0.0.1:1444 > $LOG_DIR/nodeos-b.log 2>&1 & \
+      echo \$! > $ROOT_DIR/nodeos-b/config/this.pid" > "$ROOT_DIR"/nodeos-b/start.sh
   fi
   echo "please wait while we fire up the node C"
   sleep 5
@@ -233,7 +235,8 @@ start_func() {
       --signature-provider ${BPC_PUBLIC_KEY}=KEY:${BPC_PRIVATE_KEY} \
       --config \"$ROOT_DIR\"/nodeos-c/config/config.ini \
       --data-dir \"$ROOT_DIR\"/nodeos-c/data \
-      --p2p-peer-address 127.0.0.1:2444 > $LOG_DIR/nodeos-c.log 2>&1 &" > "$ROOT_DIR"/nodeos-c/start.sh
+      --p2p-peer-address 127.0.0.1:2444 > $LOG_DIR/nodeos-c.log 2>&1 & \
+      echo \$! > $ROOT_DIR/nodeos-c/config/this.pid" > "$ROOT_DIR"/nodeos-c/start.sh
   fi
 
   echo "please wait while we fire up the node D"
@@ -271,7 +274,8 @@ start_func() {
           --signature-provider ${BPD_PUBLIC_KEY}=KEY:${BPD_PRIVATE_KEY} \
           --config \"$ROOT_DIR\"/nodeos-d/config/config.ini \
           --data-dir \"$ROOT_DIR\"/nodeos-d/data \
-          --p2p-peer-address 127.0.0.1:3444 > $LOG_DIR/nodeos-d.log 2>&1 &" > "$ROOT_DIR"/nodeos-d/start.sh
+          --p2p-peer-address 127.0.0.1:3444 > $LOG_DIR/nodeos-d.log 2>&1 & \
+          echo \$! > $ROOT_DIR/nodeos-d/config/this.pid" > "$ROOT_DIR"/nodeos-d/start.sh
   fi
 
   echo "waiting for production network to sync up..."
