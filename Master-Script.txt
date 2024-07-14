@@ -24,14 +24,14 @@ mkdir /bigata1/log/Wave-3-ReplaceNodeFinalizerKey
 # Preserve Finalizer JSON
 cp /bigata1/savanna/setfinalizer.json /bigata1/log/Wave-3-ReplaceNodeFinalizerKey/setfinalizer-1.json
 # Preserve CONFIG & Start Scripts
-for n in nodeos-a nodes-b nodes-c nodes-d; do
+for n in nodeos-a nodeos-b nodeos-c nodeos-d; do
   cp /bigata1/savanna/${n}/config/config.ini /bigata1/log/Wave-3-ReplaceNodeFinalizerKey/${n}-config.ini
   cp /bigata1/savanna/${n}/start.sh /bigata1/log/Wave-3-ReplaceNodeFinalizerKey/${n}-start.sh
 done
 # Kill Node A
 date -u && kill -15 $(cat /bigata1/savanna/nodeos-a/config/this.pid)
 # preserve logs
-cp /bigata1/savanna/log/nodeos-a.log /bigata1/log/Wave-3-ReplaceNodeFinalizerKey/nodeos-a-1.log
+cp /bigata1/log/nodeos-a.log /bigata1/log/Wave-3-ReplaceNodeFinalizerKey/nodeos-a-1.log
 # generate new BLS key, add to config, do not restart yet
 ./bin/bls_key_helper.sh node-b-replacement >> /bigata1/savanna/nodeos-b/config/config.ini
 # update node-b keys in json
@@ -53,7 +53,7 @@ date -u
 # Restart Node B
 date -u && kill -15 $(cat /bigata1/savanna/nodeos-b/config/this.pid)
 # preserve logs
-cp /bigata1/savanna/log/nodeos-b.log /bigata1/log/Wave-3-ReplaceNodeFinalizerKey/nodeos-b-1.log
+cp /bigata1/log/nodeos-b.log /bigata1/log/Wave-3-ReplaceNodeFinalizerKey/nodeos-b-1.log
 # Start Node-B
 cat /bigata1/savanna/nodeos-b/start.sh
 date -u
@@ -64,8 +64,8 @@ date -u
 --> DATE       HEAD           LIB
 # Stop All Nodes and Preserve Logs
 ./bin/finality_test_network.sh STOP
-for n in nodeos-a nodes-b nodes-c nodes-d; do
-  cp /bigata1/savanna/log/${n}.log /bigata1/log/Wave-3-ReplaceNodeFinalizerKey/${n}-final.log
+for n in nodeos-a nodeos-b nodeos-c nodeos-d; do
+  cp /bigata1/log/${n}.log /bigata1/log/Wave-3-ReplaceNodeFinalizerKey/${n}-final.log
 done
 date -u
 --> DATE
@@ -78,7 +78,7 @@ mkdir /bigata1/log/Wave-3-Wave-3-PolicyWeightChange
 cp /bigata1/savanna/setfinalizer.json /bigata1/log/Wave-3-PolicyWeightChange/setfinalizer-1.json
 ./bin/finality_test_network.sh START
 # Preserve CONFIG & Start Scripts
-for n in nodeos-a nodes-b nodes-c nodes-d; do
+for n in nodeos-a nodeos-b nodeos-c nodeos-d; do
   cp /bigata1/savanna/${n}/config/config.ini /bigata1/log/Wave-3-PolicyWeightChange/${n}-config.ini
   cp /bigata1/savanna/${n}/start.sh /bigata1/log/Wave-3-PolicyWeightChange/${n}-start.sh
 done
@@ -125,8 +125,8 @@ date -u
 --> DATE      HEAD      LIB
 # Stop All Nodes and Preserve Logs
 ./bin/finality_test_network.sh STOP
-for n in nodeos-a nodes-b nodes-c nodes-d; do
-  cp /bigata1/savanna/log/${n}.log /bigata1/log/Wave-3-PolicyWeightChange/${n}-final.log
+for n in nodeos-a nodeos-b nodeos-c nodeos-d; do
+  cp /bigata1/log/${n}.log /bigata1/log/Wave-3-PolicyWeightChange/${n}-final.log
 done
 date -u
 --> DATE
@@ -140,7 +140,7 @@ mkdir /bigata1/log/Wave-3-ReduceThreshReplaceKeys
 cp /bigata1/savanna/setfinalizer.json /bigata1/log/Wave-3-ReduceThreshReplaceKeys/setfinalizer-1.json
 ./bin/finality_test_network.sh START
 # Preserve CONFIG & Start Scripts
-for n in nodeos-a nodes-b nodes-c nodes-d; do
+for n in nodeos-a nodeos-b nodeos-c nodeos-d; do
   cp /bigata1/savanna/${n}/config/config.ini /bigata1/log/Wave-3-ReduceThreshReplaceKeys/${n}-config.ini
   cp /bigata1/savanna/${n}/start.sh /bigata1/log/Wave-3-ReduceThreshReplaceKeys/${n}-start.sh
 done
@@ -155,7 +155,6 @@ date -u
 # Shutdown Nodes B, C, D
 date -u && kill -15 $(cat /bigata1/savanna/nodeos-b/config/this.pid)
 date -u && kill -15 $(cat /bigata1/savanna/nodeos-c/config/this.pid)
-date -u && kill -15 $(cat /bigata1/savanna/nodeos-d/config/this.pid)
 # Preserve Logs
 cp /bigata1/log/nodeos-b.log /bigata1/log/Wave-3-ReduceThreshReplaceKeys/nodeos-b-1.log
 cp /bigata1/log/nodeos-c.log /bigata1/log/Wave-3-ReduceThreshReplaceKeys/nodeos-c-1.log
@@ -221,8 +220,8 @@ mv /bigata1/savanna/nodeos-a/data/snapshots/snapshot*.bin /bigata1/savanna/nodeo
 # Stop All Nodes and Preserve Logs
 cd ..
 ./bin/finality_test_network.sh STOP
-for n in nodeos-a nodes-b nodes-c nodes-d; do
-  cp /bigata1/savanna/log/${n}.log /bigata1/log/Wave-3-ReplaceNodeFinalizerKey/${n}-final.log
+for n in nodeos-a nodeos-b nodeos-c nodeos-d; do
+  cp /bigata1/log/${n}.log /bigata1/log/Wave-3-ReplaceNodeFinalizerKey/${n}-final.log
 done
 date -u
 --> DATE
@@ -238,7 +237,7 @@ mkdir /bigata1/log/Wave-3-RestartFromSnapshot
 cp /bigata1/savanna/setfinalizer.json /bigata1/log/Wave-3-RestartFromSnapshot/setfinalizer-1.json
 ./bin/finality_test_network.sh START
 # Preserve CONFIG & Start Scripts
-for n in nodeos-a nodes-b nodes-c nodes-d; do
+for n in nodeos-a nodeos-b nodeos-c nodeos-d; do
   cp /bigata1/savanna/${n}/config/config.ini /bigata1/log/Wave-3-RestartFromSnapshot/${n}-config.ini
   cp /bigata1/savanna/${n}/start.sh /bigata1/log/Wave-3-RestartFromSnapshot/${n}-start.sh
 done
@@ -255,15 +254,15 @@ date -u && kill -15 $(cat /bigata1/savanna/nodeos-c/config/this.pid)
 date -u && kill -15 $(cat /bigata1/savanna/nodeos-d/config/this.pid)
 --> DATE
 # Preserve Logs
-cp /bigata1/log/nodeos-a.log /bigata1/log/Wave-3-ReduceThreshReplaceKeys/nodeos-a-1.log
-cp /bigata1/log/nodeos-b.log /bigata1/log/Wave-3-ReduceThreshReplaceKeys/nodeos-b-1.log
-cp /bigata1/log/nodeos-c.log /bigata1/log/Wave-3-ReduceThreshReplaceKeys/nodeos-c-1.log
-cp /bigata1/log/nodeos-d.log /bigata1/log/Wave-3-ReduceThreshReplaceKeys/nodeos-d-1.log
+cp /bigata1/log/nodeos-a.log /bigata1/log/Wave-3-RestartFromSnapshot/nodeos-a-1.log
+cp /bigata1/log/nodeos-b.log /bigata1/log/Wave-3-RestartFromSnapshot/nodeos-b-1.log
+cp /bigata1/log/nodeos-c.log /bigata1/log/Wave-3-RestartFromSnapshot/nodeos-c-1.log
+cp /bigata1/log/nodeos-d.log /bigata1/log/Wave-3-RestartFromSnapshot/nodeos-d-1.log
 # Remove State
-rm /bigata1/savanna/nodeos-a/data/state
-rm /bigata1/savanna/nodeos-b/data/state
-rm /bigata1/savanna/nodeos-c/data/state
-rm /bigata1/savanna/nodeos-d/data/state
+rm /bigata1/savanna/nodeos-a/data/state/*
+rm /bigata1/savanna/nodeos-b/data/state/*
+rm /bigata1/savanna/nodeos-c/data/state/*
+rm /bigata1/savanna/nodeos-d/data/state/*
 # update start add --snapshot /bigata1/savanna/nodeos-a/data/snapshots/target/snapshot*.bin
 vi /bigata1/savanna/nodeos-a/start.sh
 vi /bigata1/savanna/nodeos-b/start.sh
@@ -298,10 +297,9 @@ date -u && kill -15 $(cat /bigata1/savanna/nodeos-a/config/this.pid)
 date -u
 --> DATE         HEAD       LIB
 # Stop All Nodes and Preserve Logs
-cd ..
 ./bin/finality_test_network.sh STOP
-for n in nodeos-a nodes-b nodes-c nodes-d; do
-  cp /bigata1/savanna/log/${n}.log /bigata1/log/Wave-3-RestartFromSnapshot/${n}-final.log
+for n in nodeos-a nodeos-b nodeos-c nodeos-d; do
+  cp /bigata1/log/${n}.log /bigata1/log/Wave-3-RestartFromSnapshot/${n}-final.log
 done
 date -u
 --> DATE
