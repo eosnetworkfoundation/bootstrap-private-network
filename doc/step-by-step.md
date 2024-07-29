@@ -17,7 +17,7 @@ These Git Commit Hashes or Tags are current to the following date.
 https://github.com/eosnetworkfoundation/bootstrap-private-network/blob/3294441405fe45cfeb417e606fbf2cd6d6f75a09/bin/docker-build-image.sh#L17
 
 ### Branches
-- Spring: branch `release/1.0-beta1` repo `AntelopeIO/spring`
+- Spring: branch `release/1.0-beta4` repo `AntelopeIO/spring`
 - CDT: branch `release/4.1` repo `AntelopeIO/cdt`
 - Reference Contracts: branch `main` repo `AntelopeIO/reference-contracts`
 
