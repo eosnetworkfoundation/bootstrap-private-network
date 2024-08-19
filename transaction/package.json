@@ -1,0 +1,24 @@
+{
+  "name": "@enf/transaction",
+  "version": "1.0.0",
+  "description": "2 step transaction submission builds a transaction and broadcasts",
+  "type": "module",
+  "main": "transfer.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/eosnetworkfoundation/bootstrap-private-network.git#wave3-testnet"
+  },
+  "author": "eric passmore",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/eosnetworkfoundation/bootstrap-private-network/issues"
+  },
+  "homepage": "https://github.com/eosnetworkfoundation/bootstrap-private-network/tree/wave3-testnet#readme",
+  "dependencies": {
+    "@wharfkit/antelope": "^1.0.8",
+    "node-fetch": "^3.3.2"
+  }
+}

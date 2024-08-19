@@ -80,8 +80,9 @@ cleos --url $ENDPOINT push action eosio activate '["e0fb64b1085cc5538970158d05a0
 # GET_SENDER
 cleos --url $ENDPOINT push action eosio activate '["f0af56d2c5a48d60a4a5b5c903edfb7db3a736a94ed589d0b797df33ff9d3e1d"]' -p eosio
 # SAVANNA
+# DO NOT ACTIVATE HERE WILL ACTIVATE VIA MSIG
 # Depends on all other protocol features
-cleos --url $ENDPOINT push action eosio activate '["cbe0fafc8fcc6cc998395e9b6de6ebd94644467b1b4a97ec126005df07013c52"]' -p eosio
+# cleos --url $ENDPOINT push action eosio activate '["cbe0fafc8fcc6cc998395e9b6de6ebd94644467b1b4a97ec126005df07013c52"]' -p eosio
 sleep 1
 
 cleos --url $ENDPOINT set contract eosio "$CONTRACT_DIR"/eosio.system
