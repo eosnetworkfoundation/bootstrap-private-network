@@ -31,7 +31,7 @@ cleos --url $ENDPOINT create account eosio eosio.reserv $PUBLIC_KEY
 cleos --url $ENDPOINT set contract eosio.token "$CONTRACT_DIR"/eosio.token/
 cleos --url $ENDPOINT push action eosio.token create '[ "eosio", "380000000.0000 EOS" ]' -p eosio.token@active
 cleos --url $ENDPOINT push action eosio.token issue '[ "eosio", "380000000.0000 EOS", "initial issuance" ]' -p eosio
-cleos --url $ENDPOINT set contract eosio "$CONTRACT_DIR"/eosio.msig
+cleos --url $ENDPOINT set contract eosio.msig "$CONTRACT_DIR"/eosio.msig
 cleos --url $ENDPOINT set contract eosio "$CONTRACT_DIR"/eosio.wrap
 
 curl --request POST --url "$ENDPOINT"/v1/producer/schedule_protocol_feature_activations -d '{"protocol_features_to_activate": ["0ec7e080177b2c02b278d5088611686b49d739925a92d9bfcacd7fc6b74053bd"]}'
