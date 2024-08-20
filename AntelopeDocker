@@ -1,4 +1,4 @@
-FROM ubuntu:22.04 as build-install-stage
+FROM ubuntu:22.04 AS build-install-stage
 RUN apt-get -y update && apt-get install -y  \
         build-essential   \
         cmake             \
@@ -59,7 +59,7 @@ RUN mkdir /local/eosnetworkfoundation/software/cdt
 RUN mv /local/eosnetworkfoundation/spring_build/antelope-spring_*.deb /local/eosnetworkfoundation/software/spring
 RUN mv /local/eosnetworkfoundation/repos/cdt/build/tools/bin /local/eosnetworkfoundation/software/cdt
 
-FROM build-install-stage as clean-out-stage
+FROM build-install-stage AS clean-out-stage
 RUN rm -rf /local/eosnetworkfoundation/repos/spring/.git/modules
 RUN find /local/eosnetworkfoundation/repos/spring/ -name "build" -type d | xargs rm -rf
 RUN rm -rf /local/eosnetworkfoundation/repos/cdt/build

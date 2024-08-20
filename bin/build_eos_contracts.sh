@@ -6,6 +6,8 @@
 # called from Docker Build
 ###
 
+set -x
+
 CONTRACTS_GIT_COMMIT_TAG=${1:-v3.5.0}
 NPROC=${2:-$(nproc)}
 TUID=$(id -ur)
@@ -26,5 +28,7 @@ git checkout $CONTRACTS_GIT_COMMIT_TAG
 git pull origin $CONTRACTS_GIT_COMMIT_TAG
 mkdir build
 cd build || exit
-cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTS=ON -Dspring_DIR="${SPRING_BUILD_DIR}/lib/cmake/spring" .. >> "${LOG_DIR}"/system_contracts_build.log 2>&1
-make -j ${NPROC} >> "${LOG_DIR}"/system_contracts_build.log 2>&1
+cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTS=ON -Dspring_DIR="${SPRING_BUILD_DIR}/lib/cmake/spring" ..
+#>> "${LOG_DIR}"/system_contracts_build.log 2>&1
+make -j ${NPROC}
+#>> "${LOG_DIR}"/system_contracts_build.log 2>&1
