@@ -8,7 +8,7 @@
 
 set -x
 
-CONTRACTS_GIT_COMMIT_TAG=${1:-v3.5.0}
+CONTRACTS_GIT_COMMIT_TAG=${1:-v3.6.0-rc1}
 NPROC=${2:-$(nproc)}
 TUID=$(id -ur)
 

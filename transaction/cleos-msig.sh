@@ -3,7 +3,7 @@
 CONTRACT_DIR="/local/eosnetworkfoundation/repos/eos-system-contracts/build/contracts"
 PUBLIC_SIG_KEY=EOS81nrWtjvMfDi9E7ddb5nbub2hBWWg6Kih7Y5oTuNPFv5mE72zN
 CHAIN_ID=493a38dc7c172cd8157fcfa4cc90ae955b3d2f714eba4dba959d5649e39efc15
-ENDPOINT=http://jungle4.cryptolions.io:80
+ENDPOINT=https://jungle4.cryptolions.io:443
 
 # create list of permissions
 # pull all the permissions from eosio.prods
@@ -39,13 +39,28 @@ cleos -u $ENDPOINT multisig propose \
 
 ## SETUP EOSC
 # DOWNLOAD RELEASE https://github.com/eoscanada/eosc/releases
-# IMPORT KEYS eosc vault create --import
+# IMPORT KEYS eosc vault create --vault-file .eosc-vault-user --import
 
 # Prepare unsigned setcode setabi transaction
+# cleos -u $ENDPOINT multisig cancel spaceranger1 spring.upd spaceranger1
 
-cleos set contract eosio ${CONTRACT_DIR}/eosio.system eosio.system.wasm eosio.system.abi -s -d \
+cleos -u $ENDPOINT set contract eosio ${CONTRACT_DIR}/eosio.system eosio.system.wasm eosio.system.abi -s -d \
     --json-file ${CONTRACT_DIR}/setcontract-eosio.system.json --expiration 8640000
 
-eosc -u $ENDPOINT multisig propose spaceranger1 testset.1 \
+eosc -u $ENDPOINT multisig propose spaceranger1 spring.upd \
     ${CONTRACT_DIR}/setcontract-eosio.system.json \
-    --request-producers
+    --request-producers --vault-file .eosc-vault-spaceranger.json
+
+# switch to savanna
+ENDPOINT=https://jungle4.cryptolions.io:443
+cleos -u $ENDPOINT push action eosio switchtosvnn '{}' -s -d --json-file ${CONTRACT_DIR}/jungle-switchtosvnn.json --expiration 8640000
+eosc -u $ENDPOINT multisig propose spaceranger1 spring.svn \
+    ${CONTRACT_DIR}/jungle-switchtosvnn.json \
+    --request-producers --vault-file .eosc-vault-spaceranger.json
+
+# Test
+ENDPOINT=http://127.0.0.1:8888
+cleos -u $ENDPOINT push action eosio switchtosvnn '{}' -s -d --json-file ${CONTRACT_DIR}/local-switchtosvnn.json --expiration 8640000
+eosc -u $ENDPOINT multisig propose bpa spring.svn \
+  ${CONTRACT_DIR}/local-switchtosvnn.json \
+  --request-producers --vault-file .eosc-vault-bpa

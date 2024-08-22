@@ -22,6 +22,8 @@ We need to set both code and abi on chain.
     - Expected SHA256SUM
        - `04a9f28eb30bcc81432823266dac98272d4996fa7b41ef112191c2a8609ac262`  eosio.system.abi
        - `e6b292aff2b4387a509dbe67b9abdda1867c8c4146bb93d2f5695108e1fda110`  eosio.system.wasm
+       - `d525e21c69f8439e27e5fa6f020a1a9fbdd1d36baa3a4c839d6d6ea4a1b2cdfc`  eosio.system.wasm
+       - `0a34e6f8b6d6809a90144dc87ea9c05a8fb23ed5c2198a3882670cae3aff69a4`  eosio.system.wasm
 3) Apply contract settting code and abi
 ```
 cleos --url $ENDPOINT set contract eosio "$CONTRACT_DIR"/eosio.system
