@@ -6,7 +6,7 @@
 # called from Docker Build
 ###
 
-CONTRACTS_GIT_COMMIT_TAG=${1:-main}
+CONTRACTS_GIT_COMMIT_TAG=${1:-v3.6.0-rc1}
 NPROC=${2:-$(nproc)}
 TUID=$(id -ur)
 
@@ -18,7 +18,7 @@ fi
 
 ROOT_DIR=/local/eosnetworkfoundation
 SPRING_BUILD_DIR="${ROOT_DIR}"/spring_build
-SPRING_CONTRACT_DIR="${ROOT_DIR}"/repos/reference-contracts
+SPRING_CONTRACT_DIR="${ROOT_DIR}"/repos/eos-system-contracts
 LOG_DIR=/bigata1/log
 
 cd "${SPRING_CONTRACT_DIR:?}" || exit
