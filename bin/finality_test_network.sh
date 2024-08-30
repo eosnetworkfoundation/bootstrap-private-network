@@ -114,6 +114,7 @@ start_func() {
     # create accounts, activate protocols, create tokens, set system contracts
     sleep 1
     "$SCRIPT_DIR"/boot_actions.sh "$ENDPOINT" "$CONTRACT_DIR" "$EOS_ROOT_PUBLIC_KEY"
+    "$SCRIPT_DIR"/add_time_func.sh "$ENDPOINT" 
     sleep 1
     # create producer and user accounts, stake EOS
     "$SCRIPT_DIR"/create_accounts.sh "$ENDPOINT" "$CONTRACT_DIR"

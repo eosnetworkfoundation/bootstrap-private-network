@@ -6,7 +6,7 @@
 # called from Docker Build
 ###
 
-CONTRACTS_GIT_COMMIT_TAG=${1:-v3.6.0-rc1}
+CONTRACTS_GIT_COMMIT_TAG=${1:-v3.6.0-rc2}
 NPROC=${2:-$(nproc)}
 TUID=$(id -ur)
 
@@ -28,3 +28,7 @@ mkdir build
 cd build || exit
 cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTS=ON -Dspring_DIR="${SPRING_BUILD_DIR}/lib/cmake/spring" .. >> "${LOG_DIR}"/reference_contracts_build.log 2>&1
 make -j ${NPROC} >> "${LOG_DIR}"/reference_contracts_build.log 2>&1
+
+TIME_CONTRACT_DIR="${ROOT_DIR}"/repos/eosio.time
+cd "${TIME_CONTRACT_DIR:?}" || exit
+cdt-cpp eosio.time.cpp
