@@ -14,5 +14,5 @@ if [ $used_size -gt $max_space_used ]; then
   TARGET="clean-out-stage"
 fi
 
-# Aug 22 2024 Build Spring v1.0.0-rc2
-docker build -f AntelopeDocker --tag savanna-antelope:1.0.0-rc3 --ulimit nofile=1024:1024 --target ${TARGET} .
+# Sept 4th 2024 Build Spring v1.0.0
+docker build -f AntelopeDocker --tag savanna-antelope:1.0.0 --ulimit nofile=1024:1024 --target ${TARGET} .

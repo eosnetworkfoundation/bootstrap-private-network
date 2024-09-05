@@ -3,6 +3,9 @@
 ENDPOINT_ONE=$1
 WALLET_DIR=$2
 
+cleos --url $ENDPOINT_ONE transfer eosio enf "10000 EOS" "init funding"
+cleos --url $ENDPOINT_ONE system buyram eosio enf "1000 EOS"
+
 # create 21 producers error out if vars not set
 for producer_name in bpa bpb bpc
 do

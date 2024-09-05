@@ -27,6 +27,7 @@ cleos --url $ENDPOINT create account eosio eosio.reward $PUBLIC_KEY
 cleos --url $ENDPOINT create account eosio eosio.wram $PUBLIC_KEY
 cleos --url $ENDPOINT create account eosio eosio.reserv $PUBLIC_KEY
 cleos --url $ENDPOINT create account eosio eosio.time $PUBLIC_KEY
+cleos --url $ENDPOINT create account eosio enf $PUBLIC_KEY
 
 cleos --url $ENDPOINT set contract eosio.token "$CONTRACT_DIR"/eosio.token/
 cleos --url $ENDPOINT push action eosio.token create '[ "eosio", "380000000.0000 EOS" ]' -p eosio.token@active
