@@ -76,7 +76,7 @@ setup_leap() {
   DEB_FILE="leap_5.0.2_amd64.deb"
   # download file if needed
   if [ ! -f "/local/eosnetworkfoundation/${DEB_FILE}" ]; then
-      wget --directory-prefix="/local/eosnetworkfoundation" "${DEB_URL}" 2> /dev/null
+      curl --output /local/eosnetworkfoundation/"${DEB_FILE}" -L ${DEB_URL} 2> /dev/null
   fi
 
   # install nodeos locally
@@ -266,7 +266,7 @@ start_func() {
     # nodeos5 --agent-name "eosbproducer" \
     #  --config "$ROOT_DIR"/eosbproducer-config.ini \
     #  --data-dir "$ROOT_DIR"/eosbproducer/data > $LOG_DIR/eosbproducer.log 2>&1 &
-    # producer mode 
+    # producer mode
     nodeos5 --agent-name "eosbproducer" \
       --producer-name bpc \
       --config "$ROOT_DIR"/eosbproducer-config.ini \
