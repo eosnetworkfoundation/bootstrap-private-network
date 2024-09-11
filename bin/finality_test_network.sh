@@ -45,7 +45,7 @@ fi
 #####
 stop_func() {
   MY_ID=$(id -u)
-  for p in $(ps -u $MY_ID | grep nodeos | sed -e 's/^[[:space:]]*//' | cut -d" " -f1); do
+  for p in $(ps -u $MY_ID | grep -v eosbproducer | grep nodeos | sed -e 's/^[[:space:]]*//' | cut -d" " -f1); do
     echo $p && kill -15 $p
   done
   echo "waiting for production network to quiesce..."
