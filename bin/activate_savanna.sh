@@ -23,6 +23,8 @@ cleos --url $ENDPOINT push action eosio activate '["63320dd4a58212e4d32d1f58926b
 # Depends on all other protocol features
 cleos --url $ENDPOINT push action eosio activate '["cbe0fafc8fcc6cc998395e9b6de6ebd94644467b1b4a97ec126005df07013c52"]' -p eosio
 
+sleep 2
+
 # unwindw our producer finalizer keys and make activating call
 # New System Contracts Replace with actions regfinkey, and switchtosvnn
 # regfinkey [producer name] [public key] [proof of possession]
