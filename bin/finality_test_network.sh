@@ -251,24 +251,24 @@ start_func() {
     echo "p2p-peer-address=127.0.0.1:2444" >> "$ROOT_DIR"/eosbproducer-config.ini
     echo "p2p-peer-address=127.0.0.1:3444" >> "$ROOT_DIR"/eosbproducer-config.ini
     # non producer mode
-    #/local/eosnetworkfoundation/leap/usr/bin/nodeos --genesis-json ${ROOT_DIR}/genesis.json --agent-name "eosbproducer" \
-    #  --config "$ROOT_DIR"/eosbproducer-config.ini \
-    #  --data-dir "$ROOT_DIR"/eosbproducer/data > $LOG_DIR/eosbproducer.log 2>&1 &
-    # producer mode
     /local/eosnetworkfoundation/leap/usr/bin/nodeos --genesis-json ${ROOT_DIR}/genesis.json --agent-name "eosbproducer" \
-      --producer-name eosbproducer \
       --config "$ROOT_DIR"/eosbproducer-config.ini \
       --data-dir "$ROOT_DIR"/eosbproducer/data > $LOG_DIR/eosbproducer.log 2>&1 &
+    # producer mode
+    #/local/eosnetworkfoundation/leap/usr/bin/nodeos --genesis-json ${ROOT_DIR}/genesis.json --agent-name "eosbproducer" \
+    #  --producer-name eosbproducer \
+    #  --config "$ROOT_DIR"/eosbproducer-config.ini \
+    #  --data-dir "$ROOT_DIR"/eosbproducer/data > $LOG_DIR/eosbproducer.log 2>&1 &
   else
     # non producer mode
-    # /local/eosnetworkfoundation/leap/usr/bin/nodeos --agent-name "eosbproducer" \
+    /local/eosnetworkfoundation/leap/usr/bin/nodeos --agent-name "eosbproducer" \
+     --config "$ROOT_DIR"/eosbproducer-config.ini \
+     --data-dir "$ROOT_DIR"/eosbproducer/data > $LOG_DIR/eosbproducer.log 2>&1 &
+    # producer mode
+    #/local/eosnetworkfoundation/leap/usr/bin/nodeos --agent-name "eosbproducer" \
+    #  --producer-name eosbproducer \
     #  --config "$ROOT_DIR"/eosbproducer-config.ini \
     #  --data-dir "$ROOT_DIR"/eosbproducer/data > $LOG_DIR/eosbproducer.log 2>&1 &
-    # producer mode
-    /local/eosnetworkfoundation/leap/usr/bin/nodeos --agent-name "eosbproducer" \
-      --producer-name eosbproducer \
-      --config "$ROOT_DIR"/eosbproducer-config.ini \
-      --data-dir "$ROOT_DIR"/eosbproducer/data > $LOG_DIR/eosbproducer.log 2>&1 &
   fi
 
   echo "waiting for production network to sync up..."
