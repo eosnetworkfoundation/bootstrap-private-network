@@ -45,8 +45,11 @@ fi
 #####
 stop_func() {
   MY_ID=$(id -u)
-  for p in $(ps -u $MY_ID | grep -v eosbproducer | grep nodeos | sed -e 's/^[[:space:]]*//' | cut -d" " -f1); do
-    echo $p && kill -15 $p
+  for p in $(ps -u $MY_ID | grep nodeos | sed -e 's/^[[:space:]]*//' | cut -d" " -f1); do
+    CHECK=$(ps -p $p -f | grep eosbproducer | wc -l)
+    if [ $CHECK == 0 ]; then
+      echo $p #&& kill -15 $p
+    fi
   done
   echo "waiting for production network to quiesce..."
   sleep 5
@@ -260,10 +263,7 @@ start_func() {
     #  --config "$ROOT_DIR"/eosbproducer-config.ini \
     #  --data-dir "$ROOT_DIR"/eosbproducer/data > $LOG_DIR/eosbproducer.log 2>&1 &
   else
-    # non producer mode
-    /local/eosnetworkfoundation/leap/usr/bin/nodeos --agent-name "eosbproducer" \
-     --config "$ROOT_DIR"/eosbproducer-config.ini \
-     --data-dir "$ROOT_DIR"/eosbproducer/data > $LOG_DIR/eosbproducer.log 2>&1 &
+    echo "."
     # producer mode
     #/local/eosnetworkfoundation/leap/usr/bin/nodeos --agent-name "eosbproducer" \
     #  --producer-name eosbproducer \
