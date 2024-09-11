@@ -250,8 +250,8 @@ start_func() {
     echo "http-server-address=0.0.0.0:34500" >> "$ROOT_DIR"/eosbproducer-config.ini
     echo "p2p-listen-endpoint=0.0.0.0:34501" >> "$ROOT_DIR"/eosbproducer-config.ini
     echo "p2p-peer-address=127.0.0.1:1444" >> "$ROOT_DIR"/eosbproducer-config.ini
-    echo "p2p-peer-address 127.0.0.1:2444" >> "$ROOT_DIR"/eosbproducer-config.ini
-    echo "p2p-peer-address 127.0.0.1:3444" >> "$ROOT_DIR"/eosbproducer-config.ini
+    echo "p2p-peer-address=127.0.0.1:2444" >> "$ROOT_DIR"/eosbproducer-config.ini
+    echo "p2p-peer-address=127.0.0.1:3444" >> "$ROOT_DIR"/eosbproducer-config.ini
     # non producer mode
     #nodeos5 --genesis-json ${ROOT_DIR}/genesis.json --agent-name "eosbproducer" \
     #  --config "$ROOT_DIR"/eosbproducer-config.ini \
