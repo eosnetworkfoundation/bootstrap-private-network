@@ -22,7 +22,10 @@ cleos --url $ENDPOINT push action eosio activate '["63320dd4a58212e4d32d1f58926b
 # SAVANNA
 # Depends on all other protocol features
 cleos --url $ENDPOINT push action eosio activate '["cbe0fafc8fcc6cc998395e9b6de6ebd94644467b1b4a97ec126005df07013c52"]' -p eosio
+sleep 2
 
+# new system contracts
+cleos --url $ENDPOINT set contract eosio /local/eosnetworkfoundation/repos/eos-system-contracts/build/contracts/eosio.system
 sleep 2
 
 # unwindw our producer finalizer keys and make activating call
@@ -38,7 +41,6 @@ do
                             \"proof_of_possession\":\"${PROOF_POSSESION[$counter]:?}\"}" -p ${producer_name:?}
     let counter+=1
 done
-
 sleep 1
 
 # switchtosvnn

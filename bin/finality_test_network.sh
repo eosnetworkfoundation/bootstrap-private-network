@@ -20,11 +20,17 @@ COMMAND=${1:-"NA"}
 ROOT_DIR="/bigata1/savanna"
 LOG_DIR="/bigata1/log"
 WALLET_DIR=${HOME}/eosio-wallet
-CONTRACT_DIR="/local/eosnetworkfoundation/repos/eos-system-contracts/build/contracts"
+CONTRACT_DIR="/local/eosnetworkfoundation/repos/v3.5/eos-system-contracts/build/contracts"
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 GENESIS_FILE="/local/eosnetworkfoundation/repos/bootstrap-private-network/config/genesis.json"
 CONFIG_FILE="/local/eosnetworkfoundation/repos/bootstrap-private-network/config/config.ini"
 LOGGING_JSON="/local/eosnetworkfoundation/repos/bootstrap-private-network/config/logging.json"
+
+if [ ! -d $CONTRACT_DIR ]; then
+  echo "must build v3.5 version of EOS contracts"
+  echo "error no directory ${CONTRACT_DIR}"
+  exit
+fi
 
 ######
 # Stop Function to shutdown all nodes
