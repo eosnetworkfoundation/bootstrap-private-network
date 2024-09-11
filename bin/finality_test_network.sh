@@ -242,8 +242,6 @@ start_func() {
     mkdir -p "$ROOT_DIR"/eosbproducer/data
     EOSBL_PRIVATE_KEY=$(grep Private "$WALLET_DIR/eosbproducer.keys" | head -1 | cut -d: -f2 | sed 's/ //g')
     EOSBL_PUBLIC_KEY=$(grep Public "$WALLET_DIR/eosbproducer.keys" | head -1 | cut -d: -f2 | sed 's/ //g')
-    # non producer mode
-    # grep -v "eosio::producer" /bigata1/savanna/config.ini > "$ROOT_DIR"/eosbproducer-config.ini
     # producer mode
     cp "$ROOT_DIR"/config.ini "$ROOT_DIR"/eosbproducer-config.ini
     echo "signature-provider=${EOSBL_PUBLIC_KEY}=KEY:${EOSBL_PRIVATE_KEY}" >> "$ROOT_DIR"/eosbproducer-config.ini
@@ -258,7 +256,7 @@ start_func() {
     #  --data-dir "$ROOT_DIR"/eosbproducer/data > $LOG_DIR/eosbproducer.log 2>&1 &
     # producer mode
     /local/eosnetworkfoundation/leap/usr/bin/nodeos --genesis-json ${ROOT_DIR}/genesis.json --agent-name "eosbproducer" \
-      --producer-name bpc \
+      --producer-name eosbproducer \
       --config "$ROOT_DIR"/eosbproducer-config.ini \
       --data-dir "$ROOT_DIR"/eosbproducer/data > $LOG_DIR/eosbproducer.log 2>&1 &
   else
@@ -268,7 +266,7 @@ start_func() {
     #  --data-dir "$ROOT_DIR"/eosbproducer/data > $LOG_DIR/eosbproducer.log 2>&1 &
     # producer mode
     /local/eosnetworkfoundation/leap/usr/bin/nodeos --agent-name "eosbproducer" \
-      --producer-name bpc \
+      --producer-name eosbproducer \
       --config "$ROOT_DIR"/eosbproducer-config.ini \
       --data-dir "$ROOT_DIR"/eosbproducer/data > $LOG_DIR/eosbproducer.log 2>&1 &
   fi
