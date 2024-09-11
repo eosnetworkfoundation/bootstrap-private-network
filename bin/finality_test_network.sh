@@ -28,8 +28,16 @@ LOGGING_JSON="/local/eosnetworkfoundation/repos/bootstrap-private-network/config
 
 if [ ! -d $CONTRACT_DIR ]; then
   echo "must build v3.5 version of EOS contracts"
-  echo "error no directory ${CONTRACT_DIR}"
-  exit
+  mkdir /local/eosnetworkfoundation/repos/v3.5/
+  pushd /local/eosnetworkfoundation/repos/v3.5/ || exit
+  git clone https://github.com/eosnetworkfoundation/eos-system-contracts
+  cd eos-system-contracts/ || exit
+  git checkout v3.5.0
+  mkdir build
+  cd build || exit
+  cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTS=OFF ..
+  make -j 8
+  popd || exit
 fi
 
 ######
@@ -231,25 +239,25 @@ start_func() {
 
   if [ "$COMMAND" == "CREATE" ]; then
     setup_leap
-    mkdir -p "$ROOT_DIR"/eosblproducer/data
-    EOSBL_PRIVATE_KEY=$(grep Private "$WALLET_DIR/eosblproducer.keys" | head -1 | cut -d: -f2 | sed 's/ //g')
-    EOSBL_PUBLIC_KEY=$(grep Public "$WALLET_DIR/eosblproducer.keys" | head -1 | cut -d: -f2 | sed 's/ //g')
-    cp "$ROOT_DIR"/config.ini "$ROOT_DIR"/eosblproducer-config.ini
-    echo "signature-provider=${EOSBL_PUBLIC_KEY}=KEY:${EOSBL_PRIVATE_KEY}" >> "$ROOT_DIR"/eosblproducer-config.ini
-    echo "http-server-address=0.0.0.0:34500" >> "$ROOT_DIR"/eosblproducer-config.ini
-    echo "p2p-listen-endpoint=0.0.0.0:34501" >> "$ROOT_DIR"/eosblproducer-config.ini
-    echo "p2p-peer-address=127.0.0.1:1444" >> "$ROOT_DIR"/eosblproducer-config.ini
-    echo "p2p-peer-address 127.0.0.1:2444" >> "$ROOT_DIR"/eosblproducer-config.ini
-    echo "p2p-peer-address 127.0.0.1:3444" >> "$ROOT_DIR"/eosblproducer-config.ini
-    nodeos5 --genesis-json ${ROOT_DIR}/genesis.json --agent-name "eosblproducer" \
-      --producer-name eosblproducer \
-      --config "$ROOT_DIR"/eosblproducer-config.ini \
-      --data-dir "$ROOT_DIR"/eosblproducer/data > $LOG_DIR/eosblproducer.log 2>&1 &
+    mkdir -p "$ROOT_DIR"/eosbproducer/data
+    EOSBL_PRIVATE_KEY=$(grep Private "$WALLET_DIR/eosbproducer.keys" | head -1 | cut -d: -f2 | sed 's/ //g')
+    EOSBL_PUBLIC_KEY=$(grep Public "$WALLET_DIR/eosbproducer.keys" | head -1 | cut -d: -f2 | sed 's/ //g')
+    cp "$ROOT_DIR"/config.ini "$ROOT_DIR"/eosbproducer-config.ini
+    echo "signature-provider=${EOSBL_PUBLIC_KEY}=KEY:${EOSBL_PRIVATE_KEY}" >> "$ROOT_DIR"/eosbproducer-config.ini
+    echo "http-server-address=0.0.0.0:34500" >> "$ROOT_DIR"/eosbproducer-config.ini
+    echo "p2p-listen-endpoint=0.0.0.0:34501" >> "$ROOT_DIR"/eosbproducer-config.ini
+    echo "p2p-peer-address=127.0.0.1:1444" >> "$ROOT_DIR"/eosbproducer-config.ini
+    echo "p2p-peer-address 127.0.0.1:2444" >> "$ROOT_DIR"/eosbproducer-config.ini
+    echo "p2p-peer-address 127.0.0.1:3444" >> "$ROOT_DIR"/eosbproducer-config.ini
+    nodeos5 --genesis-json ${ROOT_DIR}/genesis.json --agent-name "eosbproducer" \
+      --producer-name eosbproducer \
+      --config "$ROOT_DIR"/eosbproducer-config.ini \
+      --data-dir "$ROOT_DIR"/eosbproducer/data > $LOG_DIR/eosbproducer.log 2>&1 &
   else
-    nodeos5 --agent-name "eosblproducer" \
-      --producer-name eosblproducer \
-      --config "$ROOT_DIR"/eosblproducer-config.ini \
-      --data-dir "$ROOT_DIR"/eosblproducer/data > $LOG_DIR/eosblproducer.log 2>&1 &
+    nodeos5 --agent-name "eosbproducer" \
+      --producer-name eosbproducer \
+      --config "$ROOT_DIR"/eosbproducer-config.ini \
+      --data-dir "$ROOT_DIR"/eosbproducer/data > $LOG_DIR/eosbproducer.log 2>&1 &
   fi
 
   echo "waiting for production network to sync up..."
