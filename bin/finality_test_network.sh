@@ -55,6 +55,25 @@ check_used_space() {
 }
 
 #####
+# setup leap 5.0.2
+#####
+setup_leap() {
+  DEB_URL="https://github.com/AntelopeIO/leap/releases/download/v5.0.2/leap_5.0.2_amd64.deb"
+  DEB_FILE="leap_5.0.2_amd64.deb"
+  # download file if needed
+  if [ ! -f "/local/eosnetworkfoundation/${DEB_FILE}" ]; then
+      wget --directory-prefix="/local/eosnetworkfoundation" "${DEB_URL}" 2> /dev/null
+  fi
+
+  # install nodeos locally
+  echo "Installing nodeos Leap 5.0.2 locally"
+  [ -d "/local/eosnetworkfoundation/leap" ] && rm -rf "/local/eosnetworkfoundation/leap"
+  mkdir "/local/eosnetworkfoundation/leap"
+  dpkg -x "/local/eosnetworkfoundation/${DEB_FILE}" "/local/eosnetworkfoundation/leap"
+  alias nodeos5='/local/eosnetworkfoundation/leap/usr/bin/nodeos'
+}
+
+#####
 # START/CREATE Function to startup all nodes
 ####
 start_func() {
@@ -114,7 +133,7 @@ start_func() {
     # create accounts, activate protocols, create tokens, set system contracts
     sleep 1
     "$SCRIPT_DIR"/boot_actions.sh "$ENDPOINT" "$CONTRACT_DIR" "$EOS_ROOT_PUBLIC_KEY"
-    "$SCRIPT_DIR"/add_time_func.sh "$ENDPOINT" 
+    "$SCRIPT_DIR"/add_time_func.sh "$ENDPOINT"
     sleep 1
     # create producer and user accounts, stake EOS
     "$SCRIPT_DIR"/create_accounts.sh "$ENDPOINT" "$CONTRACT_DIR"
@@ -201,6 +220,30 @@ start_func() {
       --data-dir "$ROOT_DIR"/nodeos-three/data \
       --p2p-peer-address 127.0.0.1:1444 \
       --p2p-peer-address 127.0.0.1:2444 > $LOG_DIR/nodeos-three.log 2>&1 &
+  fi
+
+
+  if [ "$COMMAND" == "CREATE" ]; then
+    setup_leap
+    mkdir -p "$ROOT_DIR"/eosblproducer/data
+    EOSBL_PRIVATE_KEY=$(grep Private "$WALLET_DIR/eosblproducer.keys" | head -1 | cut -d: -f2 | sed 's/ //g')
+    EOSBL_PUBLIC_KEY=$(grep Public "$WALLET_DIR/eosblproducer.keys" | head -1 | cut -d: -f2 | sed 's/ //g')
+    cp "$ROOT_DIR"/config.ini "$ROOT_DIR"/eosblproducer-config.ini
+    echo "signature-provider=${EOSBL_PUBLIC_KEY}=KEY:${EOSBL_PRIVATE_KEY}" >> "$ROOT_DIR"/eosblproducer-config.ini
+    echo "http-server-address=0.0.0.0:34500" >> "$ROOT_DIR"/eosblproducer-config.ini
+    echo "p2p-listen-endpoint=0.0.0.0:34501" >> "$ROOT_DIR"/eosblproducer-config.ini
+    echo "p2p-peer-address=127.0.0.1:1444" >> "$ROOT_DIR"/eosblproducer-config.ini
+    echo "p2p-peer-address 127.0.0.1:2444" >> "$ROOT_DIR"/eosblproducer-config.ini
+    echo "p2p-peer-address 127.0.0.1:3444" >> "$ROOT_DIR"/eosblproducer-config.ini
+    nodeos5 --genesis-json ${ROOT_DIR}/genesis.json --agent-name "eosblproducer" \
+      --producer-name eosblproducer \
+      --config "$ROOT_DIR"/eosblproducer-config.ini \
+      --data-dir "$ROOT_DIR"/eosblproducer/data > $LOG_DIR/eosblproducer.log 2>&1 &
+  else
+    nodeos5 --agent-name "eosblproducer" \
+      --producer-name eosblproducer \
+      --config "$ROOT_DIR"/eosblproducer-config.ini \
+      --data-dir "$ROOT_DIR"/eosblproducer/data > $LOG_DIR/eosblproducer.log 2>&1 &
   fi
 
   echo "waiting for production network to sync up..."

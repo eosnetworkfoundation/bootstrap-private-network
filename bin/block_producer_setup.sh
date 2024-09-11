@@ -4,7 +4,7 @@ ENDPOINT_ONE=$1
 WALLET_DIR=$2
 
 # create 21 producers error out if vars not set
-for producer_name in bpa bpb bpc
+for producer_name in bpa bpb bpc eosblproducer
 do
     [ ! -s "$WALLET_DIR/${producer_name}.keys" ] && cleos create key --to-console > "$WALLET_DIR/${producer_name}.keys"
     # head because we want the first match; they may be multiple keys
@@ -27,7 +27,7 @@ for user_name in usera userb userc userd usere userf userg userh useri userj \
    userv userw userx usery userz
 do
   # vote
-  cleos --url $ENDPOINT_ONE system voteproducer prods ${user_name} bpa bpb bpc
+  cleos --url $ENDPOINT_ONE system voteproducer prods ${user_name} bpa bpb bpc eosblproducer
 done
 
 # delegate active permissions
