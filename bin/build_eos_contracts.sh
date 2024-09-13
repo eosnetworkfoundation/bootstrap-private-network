@@ -6,7 +6,7 @@
 # called from Docker Build
 ###
 
-CONTRACTS_GIT_COMMIT_TAG=${1:-v3.6.0-rc2}
+CONTRACTS_GIT_COMMIT_TAG=${1:-v3.6.0}
 NPROC=${2:-$(nproc)}
 TUID=$(id -ur)
 

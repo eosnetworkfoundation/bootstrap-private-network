@@ -47,7 +47,7 @@ RUN git clone --single-branch https://github.com/eosnetworkfoundation/bootstrap-
 RUN git clone https://github.com/eosnetworkfoundation/eosio.time
 WORKDIR /local/eosnetworkfoundation/repos/bootstrap-private-network
 # Build uses the following
-# SPRING_GIT_COMMIT_TAG=${1:-v1.0.0}
+# SPRING_GIT_COMMIT_TAG=${1:-v1.0.1}
 # CDT_GIT_COMMIT_TAG=${2:-v4.1.0}
 RUN /local/eosnetworkfoundation/repos/bootstrap-private-network/bin/build_antelope_software.sh
 USER root

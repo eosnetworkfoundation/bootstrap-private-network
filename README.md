@@ -48,7 +48,7 @@ Listing of [Versions](doc/change-list.md) between releases of this bootstrap rep
 
 
 ## Frequently Asked Questions
-Q: Why is nodeos version `v1.0.0-dev`?
+Q: Why is nodeos version `v1.0.1`?
 A: The version was reset to `v1` with the new launch of Spring.
 
 Q: How do I free up more disk space?
