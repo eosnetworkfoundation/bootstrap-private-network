@@ -28,7 +28,7 @@ sleep 2
 
 # new system contracts
 cleos --url $ENDPOINT set contract eosio /local/eosnetworkfoundation/repos/eos-system-contracts/build/contracts/eosio.system
-sleep 2
+sleep 10
 
 # unwindw our producer finalizer keys and make activating call
 # New System Contracts Replace with actions regfinkey, and switchtosvnn
